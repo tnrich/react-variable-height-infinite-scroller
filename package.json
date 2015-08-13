@@ -1,0 +1,34 @@
+{
+  "name": "react-infinite-scroller",
+  "version": "0.1.0",
+  "description": "variable row height scroller, no precomputation of row-height necessary ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -t reactify ./examples/example.js > ./examples/example.out.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tnrich/react-infinite-scroller.git"
+  },
+  "keywords": [
+    "react",
+    "infinite",
+    "variable",
+    "row",
+    "scroll",
+    "scroller",
+    "adjustable"
+  ],
+  "author": "tnrich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tnrich/react-infinite-scroller/issues"
+  },
+  "homepage": "https://github.com/tnrich/react-infinite-scroller#readme",
+  "dependencies": {
+    "react": "^0.13.3",
+    "reactify": "^1.1.1",
+    "validate.io-nonnegative-integer-array": "^1.0.1"
+  }
+}
