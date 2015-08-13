@@ -1,10 +1,15 @@
 # react-variable-height-infinite-scroller
 variable row height scroller (no precomputation of row height necessary)
 
-Demo: http://tnrich.github.io/react-variable-height-infinite-scroller/
+See a [Demo](http://tnrich.github.io/react-variable-height-infinite-scroller/)
 
 #Why
+
 Because sometimes you don't know the size of the row's you're going to render before rendering
+
+#Install: 
+
+npm i --save react-variable-height-infinite-scroller
 
 #Useage: 
 ```javascript
