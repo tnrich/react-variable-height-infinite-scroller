@@ -1,7 +1,7 @@
 var React = require('react');
 var areNonNegativeIntegers = require('validate.io-nonnegative-integer-array');
 
-var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
+var InfiniteScoller = React.createClass({
   propTypes: {
     averageElementHeight: React.PropTypes.number.isRequired,
     containerHeight: React.PropTypes.number.isRequired,
@@ -224,18 +224,18 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
       overflowY: "scroll",
     };
     return (
-      React.createElement("div", {
-        ref: "infiniteContainer", 
-        className: "infiniteContainer", 
-        style: infiniteContainerStyle, 
-        onScroll: this.onEditorScroll
-        }, 
-          React.createElement("div", {ref: "topSpacer", className: "topSpacer", style: {height: this.topSpacerHeight}}), 
-          React.createElement("div", {ref: "visibleRowsContainer", className: "visibleRowsContainer"}, 
-            rowItems
-          ), 
-          React.createElement("div", {ref: "bottomSpacer", className: "bottomSpacer", style: {height: this.bottomSpacerHeight}})
-      )
+      <div
+        ref="infiniteContainer"
+        className="infiniteContainer"
+        style={infiniteContainerStyle}
+        onScroll={this.onEditorScroll}
+        >
+          <div ref="topSpacer" className="topSpacer" style={{height: this.topSpacerHeight}}/>
+          <div ref="visibleRowsContainer" className="visibleRowsContainer">
+            {rowItems}
+          </div>
+          <div ref="bottomSpacer" className="bottomSpacer" style={{height: this.bottomSpacerHeight}}/>
+      </div>
     );
   }
 });

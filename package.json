@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -t reactify ./examples/example.js > ./examples/example.out.js"
+    "runExample": "browserify -t reactify ./examples/example.js > ./examples/example.out.js",
+    "build": "jsx InfiniteScroller.js > index.js",
+    "prepublish": "npm run jsx"
   },
   "repository": {
     "type": "git",
@@ -30,5 +32,8 @@
     "react": "^0.13.3",
     "reactify": "^1.1.1",
     "validate.io-nonnegative-integer-array": "^1.0.1"
+  },
+  "devDependencies": {
+    "react-tools": "^0.13.3"
   }
 }
