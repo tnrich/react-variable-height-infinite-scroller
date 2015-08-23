@@ -1,13 +1,14 @@
 var React = require('react');
 var areNonNegativeIntegers = require('validate.io-nonnegative-integer-array');
 
-var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
+var InfiniteScoller = React.createClass({
   propTypes: {
     averageElementHeight: React.PropTypes.number.isRequired,
     containerHeight: React.PropTypes.number.isRequired,
     preloadRowStart: React.PropTypes.number.isRequired,
+    totalNumberOfRows: React.PropTypes.number.isRequired,
     renderRow: React.PropTypes.func.isRequired,
-    rowData: React.PropTypes.array.isRequired,
+    // rowData: React.PropTypes.array.isRequired,
   },
   
   onEditorScroll: function(event) {
@@ -39,12 +40,12 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
       }
     } else if (distanceFromBottomOfVisibleRows < 0) {
       //scrolling down, so add a row below
-      var rowsToGiveOnBottom = this.props.rowData.length - 1 - this.rowEnd;
+      var rowsToGiveOnBottom = this.props.totalNumberOfRows - 1 - this.rowEnd;
       if (rowsToGiveOnBottom > 0) {
         rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / currentAverageElementHeight);
         newRowStart = this.rowStart + rowsToAdd;
 
-        if (newRowStart + this.state.visibleRows.length >= this.props.rowData.length) {
+        if (newRowStart + this.state.visibleRows.length >= this.props.totalNumberOfRows) {
           //the new row start is too high, so we instead just append the max rowsToGiveOnBottom to our current preloadRowStart
           newRowStart = this.rowStart + rowsToGiveOnBottom;
         }
@@ -62,9 +63,11 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
     var newNumberOfRowsToDisplay = this.state.visibleRows.length;
     if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
       this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
+      this.rowJumpTriggered = true;
+      this.rowJumpedTo = nextProps.rowToJumpTo;
     } else {
       var rowStart = this.rowStart;
-      this.props.rowData = nextProps.rowData;
+      // this.props.rowData = nextProps.rowData; tnr: what did this line do?
       this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
     }
   },
@@ -96,6 +99,7 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
   },
 
   componentDidUpdate: function() {
+
     //strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
     //thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we 
     //make the replacements
@@ -122,11 +126,11 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
 
     var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
     if (!visibleRowsContainer.childNodes[0]) {
-      if (this.props.rowData.length) {
+      if (this.props.totalNumberOfRows) {
         //we've probably made it here because a bunch of rows have been removed all at once
         //and the visible rows isn't mapping to the row data, so we need to shift the visible rows
         var numberOfRowsToDisplay = this.numberOfRowsToDisplay || 4;
-        var newRowStart = this.props.rowData.length - numberOfRowsToDisplay;
+        var newRowStart = this.props.totalNumberOfRows - numberOfRowsToDisplay;
         if (!areNonNegativeIntegers([newRowStart])) {
           newRowStart = 0;
         }
@@ -137,19 +141,31 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
       }
     }
     var adjustInfiniteContainerByThisAmount;
+    if (this.rowJumpTriggered) {
+      this.rowJumpTriggered = false;
+      if (this.rowJumpedTo === this.state.visibleRows[0]) {
+        //we've successfully jumped to that row as the top row!
+        //but it probably needs to be adjusted to be centered/at the top of the users viewport
+        console.log('hoorah!');
+        adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
+        infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
+      } else {
+        console.log('nein!');
+      }
+    }
 
     //check if the visible rows fill up the viewport
     //tnrtodo: maybe put logic in here to reshrink the number of rows to display... maybe...
     if (visibleRowsContainer.getBoundingClientRect().height / 2 <= this.props.containerHeight) {
       //visible rows don't yet fill up the viewport, so we need to add rows
-      if (this.rowStart + this.state.visibleRows.length < this.props.rowData.length) {
+      if (this.rowStart + this.state.visibleRows.length < this.props.totalNumberOfRows) {
         //load another row to the bottom
         this.prepareVisibleRows(this.rowStart, this.state.visibleRows.length + 1);
       } else {
         //there aren't more rows that we can load at the bottom so we load more at the top
         if (this.rowStart - 1 > 0) {
           this.prepareVisibleRows(this.rowStart - 1, this.state.visibleRows.length + 1); //don't want to just shift view
-        } else if (this.state.visibleRows.length < this.props.rowData.length) {
+        } else if (this.state.visibleRows.length < this.props.totalNumberOfRows) {
           this.prepareVisibleRows(0, this.state.visibleRows.length + 1);
         }
       }
@@ -171,7 +187,7 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
   componentWillMount: function(argument) {
     //this is the only place where we use preloadRowStart
     var newRowStart = 0;
-    if (this.props.preloadRowStart < this.props.rowData.length) {
+    if (this.props.preloadRowStart < this.props.totalNumberOfRows) {
       newRowStart = this.props.preloadRowStart;
     }
     this.prepareVisibleRows(newRowStart, 4);
@@ -184,11 +200,11 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
 
   prepareVisibleRows: function(rowStart, newNumberOfRowsToDisplay) { //note, rowEnd is optional
     //setting this property here, but we should try not to use it if possible, it is better to use
-    //this.state.visibleRowData.length
+    //this.state.totalNisiblenumberOfRows
     this.numberOfRowsToDisplay = newNumberOfRowsToDisplay;
-    var rowData = this.props.rowData;
-    if (rowStart + newNumberOfRowsToDisplay > this.props.rowData.length) {
-      this.rowEnd = rowData.length - 1;
+    // var rowData = this.props.rowData;
+    if (rowStart + newNumberOfRowsToDisplay > this.props.totalNumberOfRows) {
+      this.rowEnd = this.props.totalNumberOfRows - 1;
     } else {
       this.rowEnd = rowStart + newNumberOfRowsToDisplay - 1;
     }
@@ -202,7 +218,11 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
       console.warn('e.trace', e.trace);
       throw e;
     }
-    var newVisibleRows = rowData.slice(this.rowStart, this.rowEnd + 1);
+    var newVisibleRows = [];
+    for (var i = this.rowStart; i <= this.rowEnd; i++) {
+      newVisibleRows.push(i);
+    }
+    // var newVisibleRows = this.rowStart, this.rowEnd + 1);
     this.setState({
       visibleRows: newVisibleRows
     });
@@ -214,13 +234,14 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
 
   render: function() {
     var self = this;
+
     var rowItems = this.state.visibleRows.map(function(row) {
       return self.props.renderRow(row);
     });
 
     var rowHeight = this.currentAverageElementHeight ? this.currentAverageElementHeight : this.props.averageElementHeight;
     this.topSpacerHeight = this.rowStart * rowHeight;
-    this.bottomSpacerHeight = (this.props.rowData.length - 1 - this.rowEnd) * rowHeight;
+    this.bottomSpacerHeight = (this.props.totalNumberOfRows - 1 - this.rowEnd) * rowHeight;
 
     var infiniteContainerStyle = {
       height: this.props.containerHeight,
@@ -228,18 +249,18 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
     };
 
     return (
-      React.createElement("div", {
-        ref: "infiniteContainer", 
-        className: "infiniteContainer", 
-        style: infiniteContainerStyle, 
-        onScroll: this.onEditorScroll
-        }, 
-          React.createElement("div", {ref: "topSpacer", className: "topSpacer", style: {height: this.topSpacerHeight}}), 
-          React.createElement("div", {ref: "visibleRowsContainer", className: "visibleRowsContainer"}, 
-            rowItems
-          ), 
-          React.createElement("div", {ref: "bottomSpacer", className: "bottomSpacer", style: {height: this.bottomSpacerHeight}})
-      )
+      <div
+        ref="infiniteContainer"
+        className="infiniteContainer"
+        style={infiniteContainerStyle}
+        onScroll={this.onEditorScroll}
+        >
+          <div ref="topSpacer" className="topSpacer" style={{height: this.topSpacerHeight}}/>
+          <div ref="visibleRowsContainer" className="visibleRowsContainer">
+            {rowItems}
+          </div>
+          <div ref="bottomSpacer" className="bottomSpacer" style={{height: this.bottomSpacerHeight}}/>
+      </div>
     );
   }
 });
