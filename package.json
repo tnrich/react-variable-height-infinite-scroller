@@ -1,6 +1,6 @@
 {
   "name": "react-variable-height-infinite-scroller",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "variable row height scroller that renders just the visible rows with no precomputation of row-height necessary",
   "main": "index.js",
   "scripts": {
