@@ -31,12 +31,11 @@
   "homepage": "https://github.com/tnrich/react-variable-height-infinite-scroller#readme",
   "dependencies": {
     "react": "^0.13.3",
-    "reactify": "^1.1.1",
     "validate.io-nonnegative-integer-array": "^1.0.1"
   },
   "devDependencies": {
     "jsx-loader": "^0.13.2",
     "react-tools": "^0.13.3",
-    "watchify": "^3.3.1"
+    "reactify": "^1.1.1"
   }
 }
