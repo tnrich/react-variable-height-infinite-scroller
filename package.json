@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "buildExample": "browserify -t reactify ./examples/example.js > ./examples/example.out.js",
+    "buildExample": "watchify -t reactify ./examples/example.js -o ./examples/example.out.js",
+    "buildExample2": "webpack-dev-server --devtool eval --progress --colors --content-base",
     "build": "jsx InfiniteScroller.js > index.js",
     "prepublish": "npm run build"
   },
@@ -34,6 +35,8 @@
     "validate.io-nonnegative-integer-array": "^1.0.1"
   },
   "devDependencies": {
-    "react-tools": "^0.13.3"
+    "jsx-loader": "^0.13.2",
+    "react-tools": "^0.13.3",
+    "watchify": "^3.3.1"
   }
 }

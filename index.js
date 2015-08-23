@@ -59,10 +59,14 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var rowStart = this.rowStart;
     var newNumberOfRowsToDisplay = this.state.visibleRows.length;
-    this.props.rowData = nextProps.rowData;
-    this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
+    if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
+      this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
+    } else {
+      var rowStart = this.rowStart;
+      this.props.rowData = nextProps.rowData;
+      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
+    }
   },
 
   componentWillUpdate: function() {
@@ -172,7 +176,6 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
     }
     this.prepareVisibleRows(newRowStart, 4);
   },
-
   componentDidMount: function(argument) {
     //call componentDidUpdate so that the scroll position will be adjusted properly
     //(we may load a random row in the middle of the sequence and not have the infinte container scrolled properly initially, so we scroll to the show the rowContainer)
@@ -223,6 +226,7 @@ var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
       height: this.props.containerHeight,
       overflowY: "scroll",
     };
+
     return (
       React.createElement("div", {
         ref: "infiniteContainer", 
