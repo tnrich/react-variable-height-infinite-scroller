@@ -8,6 +8,8 @@ var InfiniteScoller = React.createClass({
     preloadRowStart: React.PropTypes.number.isRequired,
     totalNumberOfRows: React.PropTypes.number.isRequired,
     renderRow: React.PropTypes.func.isRequired,
+    rowJumpTrigger: React.PropTypes.bool,
+    rowToJumpTo: React.PropTypes.number
     // rowData: React.PropTypes.array.isRequired,
   },
   
@@ -67,7 +69,9 @@ var InfiniteScoller = React.createClass({
       this.rowJumpedTo = nextProps.rowToJumpTo;
     } else {
       var rowStart = this.rowStart;
-      // this.props.rowData = nextProps.rowData; tnr: what did this line do?
+      //we need to set the new totalNumber of rows prop here before calling prepare visible rows
+      //so that prepare visible rows knows how many rows it has to work with
+      this.props.totalNumberOfRows = nextProps.totalNisiblenumberOfRows;
       this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
     }
   },
@@ -199,10 +203,7 @@ var InfiniteScoller = React.createClass({
   },
 
   prepareVisibleRows: function(rowStart, newNumberOfRowsToDisplay) { //note, rowEnd is optional
-    //setting this property here, but we should try not to use it if possible, it is better to use
-    //this.state.totalNisiblenumberOfRows
     this.numberOfRowsToDisplay = newNumberOfRowsToDisplay;
-    // var rowData = this.props.rowData;
     if (rowStart + newNumberOfRowsToDisplay > this.props.totalNumberOfRows) {
       this.rowEnd = this.props.totalNumberOfRows - 1;
     } else {

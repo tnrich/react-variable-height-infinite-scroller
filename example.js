@@ -44,8 +44,8 @@ var App = React.createClass({
         <InfiniteScroller
               averageElementHeight={100} //this is a guess you make!
               containerHeight={600}
-              rowToJumpTo={this.state.rowToJumpTo} //row you want to jump to
-              rowJumpTrigger={this.state.rowJumpTrigger} //a boolean that you need to toggle between to trigger the row jump
+              rowToJumpTo={this.state.rowToJumpTo} //(optional) row you want to jump to
+              rowJumpTrigger={this.state.rowJumpTrigger} //(optional) a boolean that you need to toggle between to trigger the row jump
               renderRow={renderRow} //function to render a row
               totalNumberOfRows={fakeRowHeights.length} //an array of data for your rows
               preloadRowStart={10} //if you want to start at a particular row to begin with
