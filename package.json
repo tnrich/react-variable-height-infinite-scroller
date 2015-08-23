@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "buildExample": "watchify -t reactify ./examples/example.js -o ./examples/example.out.js",
-    "buildExample2": "webpack-dev-server --devtool eval --progress --colors --content-base",
+    "buildExample": "webpack && webpack-dev-server --devtool eval --progress --colors --content-base",
     "build": "jsx InfiniteScroller.js > index.js",
     "prepublish": "npm run build"
   },
