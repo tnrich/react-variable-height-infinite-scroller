@@ -4,11 +4,13 @@ var fakeRowHeights = [3,35,369,37,38,39,40,41,42,4388,44,45,46,47,48,49,50,51,52
 
 var App = React.createClass({
   getNewRandomRow: function (argument) {
-    return Math.floor(fakeRowHeights.length * Math.random());
+    return {row: Math.floor(fakeRowHeights.length * Math.random())};
   },
+  // getNewRandomRow: function (argument) {
+  //   return Math.floor(fakeRowHeights.length * Math.random());
+  // },
   getInitialState: function() {
     return {
-      rowJumpTrigger: null,
       rowToJumpTo: null,
       newRowToJumpTo: this.getNewRandomRow()
     };
@@ -34,18 +36,17 @@ var App = React.createClass({
       <div overflow='scroll'>
         <button onClick={function (argument) {
           self.setState({
-            rowJumpTrigger: (self.state.rowJumpTrigger) ? false : true,
             rowToJumpTo: self.state.newRowToJumpTo,
             newRowToJumpTo: self.getNewRandomRow()
+            // newRowToJumpTo: self.getNewRandomRow()
           });
         }}>
-          Jump to a random row: Row #{self.state.newRowToJumpTo} (its height is {fakeRowHeights[self.state.newRowToJumpTo]})
+          Jump to a random row: Row #{self.state.newRowToJumpTo.row} (its height is {fakeRowHeights[self.state.newRowToJumpTo.row]})
         </button>
         <InfiniteScroller
               averageElementHeight={100} //this is a guess you make!
               containerHeight={600}
-              rowToJumpTo={this.state.rowToJumpTo} //(optional) row you want to jump to
-              rowJumpTrigger={this.state.rowJumpTrigger} //(optional) a boolean that you need to toggle between to trigger the row jump
+              rowToJumpTo={this.state.rowToJumpTo} //(optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking 
               renderRow={renderRow} //function to render a row
               totalNumberOfRows={fakeRowHeights.length} //an array of data for your rows
               preloadRowStart={10} //if you want to start at a particular row to begin with

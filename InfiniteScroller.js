@@ -8,9 +8,9 @@ var InfiniteScoller = React.createClass({
     preloadRowStart: React.PropTypes.number.isRequired,
     totalNumberOfRows: React.PropTypes.number.isRequired,
     renderRow: React.PropTypes.func.isRequired,
-    rowJumpTrigger: React.PropTypes.bool,
-    rowToJumpTo: React.PropTypes.number
-    // rowData: React.PropTypes.array.isRequired,
+    rowToJumpTo: React.PropTypes.shape({
+      row: React.PropTypes.number,
+    }),
   },
   
   onEditorScroll: function(event) {
@@ -63,11 +63,18 @@ var InfiniteScoller = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     var newNumberOfRowsToDisplay = this.state.visibleRows.length;
-    if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
-      this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
+    if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
+      console.log('huut');
+      this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
       this.rowJumpTriggered = true;
-      this.rowJumpedTo = nextProps.rowToJumpTo;
-    } else {
+      this.rowJumpedTo = nextProps.rowToJumpTo.row;
+    }
+    // if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
+    //   this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
+    //   this.rowJumpTriggered = true;
+    //   this.rowJumpedTo = nextProps.rowToJumpTo;
+    // } 
+    else {
       var rowStart = this.rowStart;
       //we need to set the new totalNumber of rows prop here before calling prepare visible rows
       //so that prepare visible rows knows how many rows it has to work with
@@ -103,7 +110,6 @@ var InfiniteScoller = React.createClass({
   },
 
   componentDidUpdate: function() {
-
     //strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
     //thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we 
     //make the replacements
@@ -128,7 +134,6 @@ var InfiniteScoller = React.createClass({
       infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustmentScroll;
     }
 
-    var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
     if (!visibleRowsContainer.childNodes[0]) {
       if (this.props.totalNumberOfRows) {
         //we've probably made it here because a bunch of rows have been removed all at once
@@ -144,7 +149,10 @@ var InfiniteScoller = React.createClass({
         throw new Error('no visible rows!!');
       }
     }
+
     var adjustInfiniteContainerByThisAmount;
+    
+    //if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
     if (this.rowJumpTriggered) {
       this.rowJumpTriggered = false;
       if (this.rowJumpedTo === this.state.visibleRows[0]) {
@@ -196,6 +204,7 @@ var InfiniteScoller = React.createClass({
     }
     this.prepareVisibleRows(newRowStart, 4);
   },
+
   componentDidMount: function(argument) {
     //call componentDidUpdate so that the scroll position will be adjusted properly
     //(we may load a random row in the middle of the sequence and not have the infinte container scrolled properly initially, so we scroll to the show the rowContainer)

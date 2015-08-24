@@ -50,11 +50,13 @@
 
 	var App = React.createClass({displayName: "App",
 	  getNewRandomRow: function (argument) {
-	    return Math.floor(fakeRowHeights.length * Math.random());
+	    return {row: Math.floor(fakeRowHeights.length * Math.random())};
 	  },
+	  // getNewRandomRow: function (argument) {
+	  //   return Math.floor(fakeRowHeights.length * Math.random());
+	  // },
 	  getInitialState: function() {
 	    return {
-	      rowJumpTrigger: null,
 	      rowToJumpTo: null,
 	      newRowToJumpTo: this.getNewRandomRow()
 	    };
@@ -80,18 +82,17 @@
 	      React.createElement("div", {overflow: "scroll"}, 
 	        React.createElement("button", {onClick: function (argument) {
 	          self.setState({
-	            rowJumpTrigger: (self.state.rowJumpTrigger) ? false : true,
 	            rowToJumpTo: self.state.newRowToJumpTo,
 	            newRowToJumpTo: self.getNewRandomRow()
+	            // newRowToJumpTo: self.getNewRandomRow()
 	          });
 	        }}, 
-	          "Jump to a random row: Row #", self.state.newRowToJumpTo, " (its height is ", fakeRowHeights[self.state.newRowToJumpTo], ")"
+	          "Jump to a random row: Row #", self.state.newRowToJumpTo.row, " (its height is ", fakeRowHeights[self.state.newRowToJumpTo.row], ")"
 	        ), 
 	        React.createElement(InfiniteScroller, {
 	              averageElementHeight: 100, //this is a guess you make!
 	              containerHeight: 600, 
-	              rowToJumpTo: this.state.rowToJumpTo, 
-	              rowJumpTrigger: this.state.rowJumpTrigger, 
+	              rowToJumpTo: this.state.rowToJumpTo, //(optional) row you want to jump to
 	              renderRow: renderRow, //function to render a row
 	              totalNumberOfRows: fakeRowHeights.length, //an array of data for your rows
 	              preloadRowStart: 10}//if you want to start at a particular row to begin with
@@ -20492,6 +20493,8 @@
 	    preloadRowStart: React.PropTypes.number.isRequired,
 	    totalNumberOfRows: React.PropTypes.number.isRequired,
 	    renderRow: React.PropTypes.func.isRequired,
+	    rowJumpTrigger: React.PropTypes.bool,
+	    rowToJumpTo: React.PropTypes.number
 	    // rowData: React.PropTypes.array.isRequired,
 	  },
 	  
@@ -20545,13 +20548,22 @@
 
 	  componentWillReceiveProps: function(nextProps) {
 	    var newNumberOfRowsToDisplay = this.state.visibleRows.length;
-	    if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
-	      this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
+	    if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
+	      console.log('huut');
+	      this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
 	      this.rowJumpTriggered = true;
-	      this.rowJumpedTo = nextProps.rowToJumpTo;
-	    } else {
+	      this.rowJumpedTo = nextProps.rowToJumpTo.row;
+	    }
+	    // if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
+	    //   this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
+	    //   this.rowJumpTriggered = true;
+	    //   this.rowJumpedTo = nextProps.rowToJumpTo;
+	    // } 
+	    else {
 	      var rowStart = this.rowStart;
-	      // this.props.rowData = nextProps.rowData; tnr: what did this line do?
+	      //we need to set the new totalNumber of rows prop here before calling prepare visible rows
+	      //so that prepare visible rows knows how many rows it has to work with
+	      this.props.totalNumberOfRows = nextProps.totalNisiblenumberOfRows;
 	      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
 	    }
 	  },
@@ -20583,7 +20595,6 @@
 	  },
 
 	  componentDidUpdate: function() {
-
 	    //strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
 	    //thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we 
 	    //make the replacements
@@ -20608,7 +20619,6 @@
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustmentScroll;
 	    }
 
-	    var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
 	    if (!visibleRowsContainer.childNodes[0]) {
 	      if (this.props.totalNumberOfRows) {
 	        //we've probably made it here because a bunch of rows have been removed all at once
@@ -20624,7 +20634,10 @@
 	        throw new Error('no visible rows!!');
 	      }
 	    }
+
 	    var adjustInfiniteContainerByThisAmount;
+	    
+	    //if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
 	    if (this.rowJumpTriggered) {
 	      this.rowJumpTriggered = false;
 	      if (this.rowJumpedTo === this.state.visibleRows[0]) {
@@ -20676,6 +20689,7 @@
 	    }
 	    this.prepareVisibleRows(newRowStart, 4);
 	  },
+	  
 	  componentDidMount: function(argument) {
 	    //call componentDidUpdate so that the scroll position will be adjusted properly
 	    //(we may load a random row in the middle of the sequence and not have the infinte container scrolled properly initially, so we scroll to the show the rowContainer)
@@ -20683,10 +20697,7 @@
 	  },
 
 	  prepareVisibleRows: function(rowStart, newNumberOfRowsToDisplay) { //note, rowEnd is optional
-	    //setting this property here, but we should try not to use it if possible, it is better to use
-	    //this.state.totalNisiblenumberOfRows
 	    this.numberOfRowsToDisplay = newNumberOfRowsToDisplay;
-	    // var rowData = this.props.rowData;
 	    if (rowStart + newNumberOfRowsToDisplay > this.props.totalNumberOfRows) {
 	      this.rowEnd = this.props.totalNumberOfRows - 1;
 	    } else {
