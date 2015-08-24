@@ -225,7 +225,6 @@ var InfiniteScoller = React.createClass({
     this.rowStart = rowStart;
     if (!areNonNegativeIntegers([this.rowStart, this.rowEnd])) {
       var e = new Error('Error: row start or end invalid!');
-      console.warn('e.trace', e.trace);
       throw e;
     }
     var newVisibleRows = [];
@@ -245,8 +244,8 @@ var InfiniteScoller = React.createClass({
   render: function() {
     var self = this;
 
-    var rowItems = this.state.visibleRows.map(function(row) {
-      return self.props.renderRow(row);
+    var rowItems = this.state.visibleRows.map(function(rowNumber) {
+      return self.props.renderRow(rowNumber);
     });
 
     var rowHeight = this.currentAverageElementHeight ? this.currentAverageElementHeight : this.props.averageElementHeight;

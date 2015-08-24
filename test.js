@@ -1,6 +1,6 @@
 var React = require('react');
 var InfiniteScroller = require('./InfiniteScroller.js');
-// var fakeRows = [3,35,369,37,38,39,40,41,42,4388,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67, 123,188,12,122,616,234,636,755,432,112,443,69,77,88,89,99,111,222,333,444,55,555,6654];
+
 function getFakeRowsWithHeights (numberOfRows) {
    var newFakeRows = [];
    for (var i = 0; i < numberOfRows; i++) {
@@ -37,25 +37,24 @@ var App = React.createClass({
                 {heightOfRow}
             </div>);
     }
-    console.log('hey');
-    var newNumberOfRowsToDisplay = Math.floor(Math.random()*200);
+    var randomRow = Math.floor(self.state.fakeRows.length * Math.random())
     return (
       <div overflow='scroll'>
         <button onClick={function (argument) {
           self.setState({
             rowToJumpTo: self.state.newRowToJumpTo,
-            newRowToJumpTo: self.getNewRandomRow(self.state.fakeRows.length)
+            newRowToJumpTo: self.getNewRandomRow()
             // newRowToJumpTo: self.getNewRandomRow()
           });
         }}>
-          Jump to a random row: Row #{self.state.newRowToJumpTo.row} (its height is {self.state.fakeRows[self.state.newRowToJumpTo.row].height})
+          Jump to a random row: Row #{self.state.newRowToJumpTo.row} (its height is {self.state.fakeRows[self.state.newRowToJumpTo.row]})
         </button>
         <button onClick={function (argument) {
           self.setState({
-            fakeRows: getFakeRowsWithHeights(newNumberOfRowsToDisplay),
+            fakeRows: getFakeRowsWithHeights(100),
           });
         }}>
-          Create {newNumberOfRowsToDisplay} new rows
+          Create new rows
         </button>
         <InfiniteScroller
               averageElementHeight={100} //this is a guess you make!
@@ -70,4 +69,8 @@ var App = React.createClass({
   }
 });
 
+//tnr: instead of rendering, we should probably just mock this element..
 React.render(<App />, document.getElementById('container'));
+
+
+debugger;

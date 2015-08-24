@@ -52,9 +52,6 @@
 	  getNewRandomRow: function (argument) {
 	    return {row: Math.floor(fakeRowHeights.length * Math.random())};
 	  },
-	  // getNewRandomRow: function (argument) {
-	  //   return Math.floor(fakeRowHeights.length * Math.random());
-	  // },
 	  getInitialState: function() {
 	    return {
 	      rowToJumpTo: null,
@@ -92,7 +89,7 @@
 	        React.createElement(InfiniteScroller, {
 	              averageElementHeight: 100, //this is a guess you make!
 	              containerHeight: 600, 
-	              rowToJumpTo: this.state.rowToJumpTo, //(optional) row you want to jump to
+	              rowToJumpTo: this.state.rowToJumpTo, //(optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking 
 	              renderRow: renderRow, //function to render a row
 	              totalNumberOfRows: fakeRowHeights.length, //an array of data for your rows
 	              preloadRowStart: 10}//if you want to start at a particular row to begin with
@@ -20493,9 +20490,9 @@
 	    preloadRowStart: React.PropTypes.number.isRequired,
 	    totalNumberOfRows: React.PropTypes.number.isRequired,
 	    renderRow: React.PropTypes.func.isRequired,
-	    rowJumpTrigger: React.PropTypes.bool,
-	    rowToJumpTo: React.PropTypes.number
-	    // rowData: React.PropTypes.array.isRequired,
+	    rowToJumpTo: React.PropTypes.shape({
+	      row: React.PropTypes.number,
+	    }),
 	  },
 	  
 	  onEditorScroll: function(event) {
@@ -20559,13 +20556,13 @@
 	    //   this.rowJumpTriggered = true;
 	    //   this.rowJumpedTo = nextProps.rowToJumpTo;
 	    // } 
-	    else {
+	    // else {
 	      var rowStart = this.rowStart;
 	      //we need to set the new totalNumber of rows prop here before calling prepare visible rows
 	      //so that prepare visible rows knows how many rows it has to work with
 	      this.props.totalNumberOfRows = nextProps.totalNisiblenumberOfRows;
 	      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
-	    }
+	    // }
 	  },
 
 	  componentWillUpdate: function() {
@@ -20689,7 +20686,7 @@
 	    }
 	    this.prepareVisibleRows(newRowStart, 4);
 	  },
-	  
+
 	  componentDidMount: function(argument) {
 	    //call componentDidUpdate so that the scroll position will be adjusted properly
 	    //(we may load a random row in the middle of the sequence and not have the infinte container scrolled properly initially, so we scroll to the show the rowContainer)
