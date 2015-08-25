@@ -93,6 +93,7 @@ var InfiniteScoller = React.createClass({
       // console.log('rowStartDifference', rowStartDifference);
       if (rowStartDifference < 0) {
         // scrolling down
+        //tnrtodo: adjust heights correctly here
         for (var i = 0; i < -rowStartDifference; i++) {
           var soonToBeRemovedRowElement = visibleRowsContainer.children[i];
           if (soonToBeRemovedRowElement) {
@@ -110,17 +111,24 @@ var InfiniteScoller = React.createClass({
   },
 
   componentDidUpdate: function() {
+    if (!this.rowHeights) {
+      this.rowHeights = {};
+    }
     //strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
     //thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we 
     //make the replacements
     var infiniteContainer = React.findDOMNode(this.refs.infiniteContainer);
     var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
     var self = this;
-    if (this.soonToBeRemovedRowElementHeights) {
-      infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeights;
-    }
+    // if (this.soonToBeRemovedRowElementHeights) {
+    //   infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeights;
+    // }
+
+
+    //tnrtodo: adjust heights correctly here
     if (this.numberOfRowsAddedToTop) {
-      //we're adding rows to the top, so we're going from 100's to random heights, so we'll calculate the differenece
+      //we're adding rows to the top, so we're going from a known height (either 100s or something else we've calculated)
+      //to random heights, so we'll calculate the differenece
       //and adjust the infiniteContainer.scrollTop by it
       var adjustmentScroll = 0;
 
@@ -132,6 +140,16 @@ var InfiniteScoller = React.createClass({
         }
       }
       infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustmentScroll;
+    }
+
+    
+
+    //calculate row heights and add them to a map so we can use them later
+    for (var j = 0; j < visibleRowsContainer.children.length; j++) {
+      var rowElement = visibleRowsContainer.children[j];
+      var rowNumber = rowElement.className;
+      var rowHeight = rowElement.getBoundingClientRect().height;
+      this.rowHeights[rowNumber] = rowHeight;
     }
 
     if (!visibleRowsContainer.childNodes[0]) {
@@ -198,6 +216,7 @@ var InfiniteScoller = React.createClass({
 
   componentWillMount: function(argument) {
     //this is the only place where we use preloadRowStart
+    this.rowHeights = {};
     var newRowStart = 0;
     if (this.props.preloadRowStart < this.props.totalNumberOfRows) {
       newRowStart = this.props.preloadRowStart;
@@ -248,9 +267,17 @@ var InfiniteScoller = React.createClass({
       return self.props.renderRow(rowNumber);
     });
 
-    var rowHeight = this.currentAverageElementHeight ? this.currentAverageElementHeight : this.props.averageElementHeight;
-    this.topSpacerHeight = this.rowStart * rowHeight;
-    this.bottomSpacerHeight = (this.props.totalNumberOfRows - 1 - this.rowEnd) * rowHeight;
+    // var rowHeight = this.currentAverageElementHeight ? this.currentAverageElementHeight : this.props.averageElementHeight;
+    this.topSpacerHeight = 0;
+    this.bottomSpacerHeight = 0;
+    for (var i = 0; i < this.rowStart; i++) { //tnr check that this equality is correct
+      this.topSpacerHeight+= this.rowHeights[i] || this.props.averageElementHeight;
+    }
+    for (var j = this.rowEnd; j < this.props.totalNumberOfRows; j++) { //tnr check that this equality is correct
+      this.topSpacerHeight+= this.rowHeights[j] || this.props.averageElementHeight;
+    }
+    // this.topSpacerHeight = this.rowStart * rowHeight;
+    // this.bottomSpacerHeight = (this.props.totalNumberOfRows - 1 - this.rowEnd) * rowHeight;
 
     var infiniteContainerStyle = {
       height: this.props.containerHeight,
