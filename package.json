@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack && webpack-dev-server --port 8081 --devtool eval --progress --colors --content-base",
-    "build": "jsx --watch InfiniteScroller.js > index.js",
+    "start": "npm run watchJsx & webpack && webpack-dev-server --port 8081 --devtool eval --progress --colors --content-base",
+    "build": "jsx InfiniteScroller.js > index.js",
+    "watchJsx": "jsx --watch InfiniteScroller.js > index.js",
     "prepublish": "npm run build"
   },
   "repository": {
