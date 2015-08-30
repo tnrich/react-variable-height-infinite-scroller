@@ -64,7 +64,6 @@ var InfiniteScoller = React.createClass({
     componentWillReceiveProps: function(nextProps) {
         var newNumberOfRowsToDisplay = this.state.visibleRows.length;
         if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
-            console.log('huut');
             this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
             this.rowJumpTriggered = true;
             this.rowJumpedTo = nextProps.rowToJumpTo.row;
@@ -73,7 +72,7 @@ var InfiniteScoller = React.createClass({
         //   this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
         //   this.rowJumpTriggered = true;
         //   this.rowJumpedTo = nextProps.rowToJumpTo;
-        // } 
+        // }
         else {
             var rowStart = this.rowStart;
             //we need to set the new totalNumber of rows prop here before calling prepare visible rows
@@ -111,7 +110,7 @@ var InfiniteScoller = React.createClass({
 
     componentDidUpdate: function() {
         //strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
-        //thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we 
+        //thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we
         //make the replacements
         var infiniteContainer = React.findDOMNode(this.refs.infiniteContainer);
         var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
@@ -158,11 +157,9 @@ var InfiniteScoller = React.createClass({
             if (this.rowJumpedTo === this.state.visibleRows[0]) {
                 //we've successfully jumped to that row as the top row!
                 //but it probably needs to be adjusted to be centered/at the top of the users viewport
-                console.log('hoorah!');
                 adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
                 infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
             } else {
-                console.log('nein!');
             }
         }
         //check if the visible rows fill up the viewport
