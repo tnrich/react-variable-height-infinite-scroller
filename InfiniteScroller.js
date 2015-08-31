@@ -13,11 +13,13 @@ const InfiniteScoller = React.createClass({
     rowToJumpTo: PropTypes.shape({
       row: PropTypes.number,
     }),
+    containerClassName: PropTypes.string,
     onScroll: PropTypes.func,
   },
 
   defaultProps: {
     onScroll: noop,
+    containerClassName: 'infiniteContainer',
   },
 
   onEditorScroll(event) {
@@ -255,7 +257,7 @@ const InfiniteScoller = React.createClass({
     return (
       <div
         ref="infiniteContainer"
-        className="infiniteContainer"
+        className={this.props.containerClassName}
         style={infiniteContainerStyle}
         onScroll={this.onEditorScroll}
       >
