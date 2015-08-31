@@ -4,12 +4,14 @@
   "description": "variable row height scroller that renders just the visible rows with no precomputation of row-height necessary",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run lint",
     "start": "npm run watch & webpack && webpack-dev-server --port 8081 --devtool eval --progress --colors --content-base",
     "build": "babel InfiniteScroller.js -o index.js",
     "watch": "babel --watch InfiniteScroller.js -o index.js",
-    "prepublish": "npm run build",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "patch": "release patch",
+    "minor": "release minor",
+    "major": "release major"
   },
   "repository": {
     "type": "git",
@@ -42,9 +44,11 @@
     "eslint-plugin-babel": "^2.1.1",
     "eslint-plugin-react": "^3.3.0",
     "jsx-loader": "^0.13.2",
+    "mt-changelog": "^0.6.1",
     "react": "^0.13.3",
     "react-tools": "^0.13.3",
     "reactify": "^1.1.1",
+    "release-script": "^0.2.5",
     "webpack": "^1.12.0",
     "webpack-dev-server": "^1.10.1"
   }
