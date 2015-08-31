@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import areNonNegativeIntegers from 'validate.io-nonnegative-integer-array';
+
+function noop() {}
 
 const InfiniteScoller = React.createClass({
   propTypes: {
-    averageElementHeight: React.PropTypes.number.isRequired,
-    containerHeight: React.PropTypes.number.isRequired,
-    preloadRowStart: React.PropTypes.number.isRequired,
-    totalNumberOfRows: React.PropTypes.number.isRequired,
-    renderRow: React.PropTypes.func.isRequired,
-    rowToJumpTo: React.PropTypes.shape({
-      row: React.PropTypes.number,
+    averageElementHeight: PropTypes.number.isRequired,
+    containerHeight: PropTypes.number.isRequired,
+    preloadRowStart: PropTypes.number.isRequired,
+    totalNumberOfRows: PropTypes.number.isRequired,
+    renderRow: PropTypes.func.isRequired,
+    rowToJumpTo: PropTypes.shape({
+      row: PropTypes.number,
     }),
+    containerClassName: PropTypes.string,
+    onScroll: PropTypes.func,
+  },
+
+  defaultProps: {
+    onScroll: noop,
+    containerClassName: 'infiniteContainer',
   },
 
   onEditorScroll(event) {
@@ -57,6 +66,7 @@ const InfiniteScoller = React.createClass({
       // we haven't scrolled enough, so do nothing
     }
     this.updateTriggeredByScroll = true;
+    this.props.onScroll(event);
     // set the averageElementHeight to the currentAverageElementHeight
     // setAverageRowHeight(currentAverageElementHeight);
   },
@@ -247,14 +257,14 @@ const InfiniteScoller = React.createClass({
     return (
       <div
         ref="infiniteContainer"
-        className="infiniteContainer"
+        className={this.props.containerClassName}
         style={infiniteContainerStyle}
         onScroll={this.onEditorScroll}
       >
         <div className="topSpacer" style={{height: this.topSpacerHeight}}/>
-          <div ref="visibleRowsContainer" className="visibleRowsContainer">
-            {rowItems}
-          </div>
+        <div ref="visibleRowsContainer" className="visibleRowsContainer">
+          {rowItems}
+        </div>
         <div ref="bottomSpacer" className="bottomSpacer" style={{height: this.bottomSpacerHeight}}/>
       </div>
     );
