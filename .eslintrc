@@ -1,0 +1,23 @@
+{
+  "extends": ["eslint-config-airbnb"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "react",
+    "babel"
+  ],
+  "rules": {
+    "prefer-const": 0,
+    "vars-on-top": 0,
+    "babel/object-shorthand": 2,
+    "react/jsx-boolean-value": [2, "never"],
+    "react/jsx-no-duplicate-props": 2,
+    "react/sort-comp": 0,
+  }
+}

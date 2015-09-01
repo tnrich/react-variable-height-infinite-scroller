@@ -6,48 +6,109 @@ See a [Demo](http://tnrich.github.io/react-variable-height-infinite-scroller/)
 
 # Why
 
-Because sometimes you don't know the size of the row's you're going to render before rendering
+Because sometimes you don't know the size of the rows you're going to render before rendering
 
 # Install: 
 
+```sh
 npm i --save react-variable-height-infinite-scroller
+```
 
-# Useage: 
+# Usage:
+
+## Props
+
+| Name | Default | Description |
+| :--- |:---:| :---|
+| averageElementHeight `number` | __required__ | This is a guess you make of what is the average height. This is used to approximate number of rows when rendering more or less rows |
+| containerHeight `number` | __required__ | Maximum height of the scroll container |
+| preloadRowStart `number` | __required__ | If you want to start at a particular row to begin with |
+| totalNumberOfRows `number` | __required__ | Length of the data array |
+| renderRow `function` | __required__ | Function to render a row |
+| rowToJumpTo | *(optional)* | Object of shape `{ row: Number }`. Row you want to jump to. Must be passed as a new object each time to allow for difference checking |
+| containerClassName `string` | *(optional)* infiniteContainer | className to apply on container |
+| onScroll `function` | *(optional)* no-op |  Hook to call on scroll
+
+
+
+Taken from the demo code: 
+
 ```javascript
-var React = require('react');
-var InfiniteScroller = require('../index');
+import React from 'react';
+import InfiniteScroller from './InfiniteScroller.js';
 
-var App = React.createClass({
-  
-  render: function () {
-    var fakeRowHeights = [35,369,37,38,39,40,41,42,4388,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67, 123,188,12,122,616,234,636,755,432,112,443,69,77,88,89,99,111,222,333,444,55,555,6654];
-    function renderRow (dataItem) {
-        var a = 0;
-        // for (var i = 0; i < 1000000; i++) { //uncomment this code to simulate a complicated row rendering
-        //     a++;
-        // }
-        return (
-            <div 
-                key={dataItem} 
-                style={{height: dataItem * 1.3, background: dataItem % 2 === 0 ? 'red' : 'orange'}} //multiplying heights by an arbitrary factor just to show that the heights being passed in aren't being used to adjust the scroll container
-                > 
-                {dataItem}
-            </div>);
-    }
-      
+function getFakeRowsWithHeights(numberOfRows) {
+  let newFakeRows = [];
+  for (let i = 0; i < numberOfRows; i++) {
+    newFakeRows.push({height: Math.floor(1000 * Math.random())});
+  }
+  return newFakeRows;
+}
+
+const App = React.createClass({
+  getNewRandomRow(totalRows) {
+    return {row: Math.floor(totalRows * Math.random())};
+  },
+
+  getInitialState() {
+    return {
+      rowToJumpTo: null,
+      newRowToJumpTo: this.getNewRandomRow(100),
+      fakeRows: getFakeRowsWithHeights(100),
+    };
+  },
+  render() {
+    const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
     return (
-      <div overflow='scroll'>
+      <div overflow="scroll">
+        <button onClick={() => {
+          this.setState({
+            rowToJumpTo: this.state.newRowToJumpTo,
+            newRowToJumpTo: this.getNewRandomRow(this.state.fakeRows.length),
+          });
+        }}>
+          Jump to a random row: Row #{this.state.newRowToJumpTo.row} (its height is {this.state.fakeRows[this.state.newRowToJumpTo.row].height})
+        </button>
+        <button onClick={() => {
+          this.setState({
+            fakeRows: getFakeRowsWithHeights(newNumberOfRowsToDisplay),
+          });
+        }}>
+          Create {newNumberOfRowsToDisplay} new rows
+        </button>
         <InfiniteScroller
-              averageElementHeight={100} //this is a guess you make!
-              containerHeight={600}
-              renderRow={renderRow} //function to render a row
-              rowData={fakeRowHeights} //an array of data for your rows
-              preloadRowStart={10} //if you want to start at a particular row to begin with
-              />
+          averageElementHeight={100} // this is a guess you make!
+          containerHeight={600}
+          rowToJumpTo={this.state.rowToJumpTo} // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
+          renderRow={renderRow} // function to render a row
+          totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
+          preloadRowStart={10} // if you want to start at a particular row to begin with
+        />
       </div>
     );
-  }
+  },
+
+  renderRow(rowNumber) {
+    const heightOfRow = this.state.fakeRows[rowNumber].height;
+    return (
+      <div
+        key={rowNumber}
+        style={{height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange'}}
+      >
+        {heightOfRow}
+      </div>
+    );
+  },
 });
 
 React.render(<App />, document.getElementById('container'));
 ```
+
+# Contributing
+
+Changelog is now autogenerated. So commits have to be prefixed by one the four following prefixes: 
+
+- `[added]` added a new feature
+- `[changed]` changed an existing feature
+- `[fixed]` fixed a bug
+- `[removed]` removed something or a file

@@ -15,41 +15,37 @@ const App = React.createClass({
   },
 
   getInitialState() {
-    const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
-    const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
-    return 
+    return {
       rowToJumpTo: null,
-      newRowToJumpTo: this.getNewRandomRow(newFakeRows.length),
-      fakeRows: newFakeRows,
+      newRowToJumpTo: this.getNewRandomRow(100),
+      fakeRows: getFakeRowsWithHeights(100),
     };
   },
   render() {
-    const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
     return (
       <div overflow="scroll">
         <button onClick={() => {
           this.setState({
-            rowToJumpTo: this.state.newRowToJumpTo,
-            newRowToJumpTo: this.getNewRandomRow(this.state.fakeRows.length),
+            rowToJumpTo: self.state.newRowToJumpTo,
+            newRowToJumpTo: self.getNewRandomRow(),
+            // newRowToJumpTo: self.getNewRandomRow()
           });
         }}>
-          Jump to a random row: Row #{this.state.newRowToJumpTo.row} (its height is {this.state.fakeRows[this.state.newRowToJumpTo.row].height})
+          Jump to a random row: Row #{self.state.newRowToJumpTo.row} (its height is {self.state.fakeRows[self.state.newRowToJumpTo.row]})
         </button>
         <button onClick={() => {
-          const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
           this.setState({
-            fakeRows: newFakeRows,
-            newRowToJumpTo: this.getNewRandomRow(newFakeRows.length),
+            fakeRows: getFakeRowsWithHeights(100),
           });
         }}>
-          Create {newNumberOfRowsToDisplay} new rows
+          Create new rows
         </button>
         <InfiniteScroller
           averageElementHeight={100} // this is a guess you make!
           containerHeight={600}
           rowToJumpTo={this.state.rowToJumpTo} // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
-          totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
+          totalNumberOfRows={self.state.fakeRows.length} // an array of data for your rows
           preloadRowStart={10} // if you want to start at a particular row to begin with
         />
       </div>
@@ -57,6 +53,10 @@ const App = React.createClass({
   },
 
   renderRow(rowNumber) {
+    // let a = 0;
+    // for (let i = 0; i < 1000000; i++) { //uncomment this code to simulate a complicated row rendering
+    //     a++;
+    // }
     const heightOfRow = this.state.fakeRows[rowNumber].height;
     return (
       <div
@@ -69,4 +69,5 @@ const App = React.createClass({
   },
 });
 
+// tnr: instead of rendering, we should probably just mock this element..
 React.render(<App />, document.getElementById('container'));
