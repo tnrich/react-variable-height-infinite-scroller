@@ -17,7 +17,7 @@ const App = React.createClass({
   getInitialState() {
     const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
     const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
-    return 
+    return {
       rowToJumpTo: null,
       newRowToJumpTo: this.getNewRandomRow(newFakeRows.length),
       fakeRows: newFakeRows,
