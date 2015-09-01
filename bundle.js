@@ -72,10 +72,12 @@
 	  },
 
 	  getInitialState: function getInitialState() {
+	    var newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    var newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
 	    return {
 	      rowToJumpTo: null,
-	      newRowToJumpTo: this.getNewRandomRow(100),
-	      fakeRows: getFakeRowsWithHeights(100)
+	      newRowToJumpTo: this.getNewRandomRow(newFakeRows.length),
+	      fakeRows: newFakeRows
 	    };
 	  },
 	  render: function render() {
@@ -105,7 +107,7 @@
 	            var newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
 	            _this.setState({
 	              fakeRows: newFakeRows,
-	              newRowToJumpTo: _this.getNewRandomRow(newFakeRows)
+	              newRowToJumpTo: _this.getNewRandomRow(newFakeRows.length)
 	            });
 	          } },
 	        'Create ',
@@ -20531,18 +20533,27 @@
 
 	var _validateIoNonnegativeIntegerArray2 = _interopRequireDefault(_validateIoNonnegativeIntegerArray);
 
+	function noop() {}
+
 	var InfiniteScoller = _react2['default'].createClass({
 	  displayName: 'InfiniteScoller',
 
 	  propTypes: {
-	    averageElementHeight: _react2['default'].PropTypes.number.isRequired,
-	    containerHeight: _react2['default'].PropTypes.number.isRequired,
-	    preloadRowStart: _react2['default'].PropTypes.number.isRequired,
-	    totalNumberOfRows: _react2['default'].PropTypes.number.isRequired,
-	    renderRow: _react2['default'].PropTypes.func.isRequired,
-	    rowToJumpTo: _react2['default'].PropTypes.shape({
-	      row: _react2['default'].PropTypes.number
-	    })
+	    averageElementHeight: _react.PropTypes.number.isRequired,
+	    containerHeight: _react.PropTypes.number.isRequired,
+	    preloadRowStart: _react.PropTypes.number.isRequired,
+	    totalNumberOfRows: _react.PropTypes.number.isRequired,
+	    renderRow: _react.PropTypes.func.isRequired,
+	    rowToJumpTo: _react.PropTypes.shape({
+	      row: _react.PropTypes.number
+	    }),
+	    containerClassName: _react.PropTypes.string,
+	    onScroll: _react.PropTypes.func
+	  },
+
+	  defaultProps: {
+	    onScroll: noop,
+	    containerClassName: 'infiniteContainer'
 	  },
 
 	  onEditorScroll: function onEditorScroll(event) {
@@ -20589,6 +20600,7 @@
 	      // we haven't scrolled enough, so do nothing
 	    }
 	    this.updateTriggeredByScroll = true;
+	    this.props.onScroll(event);
 	    // set the averageElementHeight to the currentAverageElementHeight
 	    // setAverageRowHeight(currentAverageElementHeight);
 	  },
@@ -20785,7 +20797,7 @@
 	      'div',
 	      {
 	        ref: 'infiniteContainer',
-	        className: 'infiniteContainer',
+	        className: this.props.containerClassName,
 	        style: infiniteContainerStyle,
 	        onScroll: this.onEditorScroll
 	      },
