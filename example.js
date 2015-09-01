@@ -15,10 +15,12 @@ const App = React.createClass({
   },
 
   getInitialState() {
-    return {
+    const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+    const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
+    return 
       rowToJumpTo: null,
-      newRowToJumpTo: this.getNewRandomRow(100),
-      fakeRows: getFakeRowsWithHeights(100),
+      newRowToJumpTo: this.getNewRandomRow(newFakeRows.length),
+      fakeRows: newFakeRows,
     };
   },
   render() {
@@ -34,8 +36,10 @@ const App = React.createClass({
           Jump to a random row: Row #{this.state.newRowToJumpTo.row} (its height is {this.state.fakeRows[this.state.newRowToJumpTo.row].height})
         </button>
         <button onClick={() => {
+          const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
           this.setState({
-            fakeRows: getFakeRowsWithHeights(newNumberOfRowsToDisplay),
+            fakeRows: newFakeRows,
+            newRowToJumpTo: this.getNewRandomRow(newFakeRows.length),
           });
         }}>
           Create {newNumberOfRowsToDisplay} new rows
@@ -44,7 +48,7 @@ const App = React.createClass({
           averageElementHeight={100} // this is a guess you make!
           containerHeight={600}
           rowToJumpTo={this.state.rowToJumpTo} // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
-          renderRow={renderRow} // function to render a row
+          renderRow={this.renderRow} // function to render a row
           totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
           preloadRowStart={10} // if you want to start at a particular row to begin with
         />

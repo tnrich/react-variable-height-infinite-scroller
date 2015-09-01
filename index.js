@@ -265,18 +265,18 @@ var InfiniteScoller = _react2['default'].createClass({
     return _react2['default'].createElement(
       'div',
       {
-        ref: "infiniteContainer",
-        className: "infiniteContainer",
+        ref: 'infiniteContainer',
+        className: 'infiniteContainer',
         style: infiniteContainerStyle,
         onScroll: this.onEditorScroll
       },
-      _react2['default'].createElement('div', { className: "topSpacer", style: { height: this.topSpacerHeight } }),
+      _react2['default'].createElement('div', { className: 'topSpacer', style: { height: this.topSpacerHeight } }),
       _react2['default'].createElement(
         'div',
-        { ref: "visibleRowsContainer", className: "visibleRowsContainer" },
+        { ref: 'visibleRowsContainer', className: 'visibleRowsContainer' },
         rowItems
       ),
-      _react2['default'].createElement('div', { ref: "bottomSpacer", className: "bottomSpacer", style: { height: this.bottomSpacerHeight } })
+      _react2['default'].createElement('div', { ref: 'bottomSpacer', className: 'bottomSpacer', style: { height: this.bottomSpacerHeight } })
     );
   }
 });

@@ -44,79 +44,99 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var InfiniteScroller = __webpack_require__(157);
-	// var fakeRows = [3,35,369,37,38,39,40,41,42,4388,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67, 123,188,12,122,616,234,636,755,432,112,443,69,77,88,89,99,111,222,333,444,55,555,6654];
-	function getFakeRowsWithHeights (numberOfRows) {
-	   var newFakeRows = [];
-	   for (var i = 0; i < numberOfRows; i++) {
-	     newFakeRows.push({height: Math.floor(1000*Math.random())});
-	   }
-	   return newFakeRows;
-	 }
+	'use strict';
 
-	var App = React.createClass({displayName: "App",
-	  getNewRandomRow: function (totalRows) {
-	    return {row: Math.floor(totalRows * Math.random())};
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InfiniteScrollerJs = __webpack_require__(157);
+
+	var _InfiniteScrollerJs2 = _interopRequireDefault(_InfiniteScrollerJs);
+
+	function getFakeRowsWithHeights(numberOfRows) {
+	  var newFakeRows = [];
+	  for (var i = 0; i < numberOfRows; i++) {
+	    newFakeRows.push({ height: Math.floor(1000 * Math.random()) });
+	  }
+	  return newFakeRows;
+	}
+
+	var App = _react2['default'].createClass({
+	  displayName: 'App',
+
+	  getNewRandomRow: function getNewRandomRow(totalRows) {
+	    return { row: Math.floor(totalRows * Math.random()) };
 	  },
 
-	  getInitialState: function() {
+	  getInitialState: function getInitialState() {
 	    return {
 	      rowToJumpTo: null,
 	      newRowToJumpTo: this.getNewRandomRow(100),
 	      fakeRows: getFakeRowsWithHeights(100)
 	    };
 	  },
-	  render: function () {
-	    var self = this;
-	    function renderRow (rowNumber) {
-	        var a = 0;
-	        // for (var i = 0; i < 1000000; i++) { //uncomment this code to simulate a complicated row rendering
-	        //     a++;
-	        // }
-	        var heightOfRow = self.state.fakeRows[rowNumber].height;
-	        return (
-	            React.createElement("div", {
-	                key: rowNumber, 
-	                style: {height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange'}
-	                }, 
-	                heightOfRow
-	            ));
-	    }
-	    console.log('hey');
-	    var newNumberOfRowsToDisplay = Math.floor(Math.random()*200);
-	    return (
-	      React.createElement("div", {overflow: "scroll"}, 
-	        React.createElement("button", {onClick: function (argument) {
-	          self.setState({
-	            rowToJumpTo: self.state.newRowToJumpTo,
-	            newRowToJumpTo: self.getNewRandomRow(self.state.fakeRows.length)
-	            // newRowToJumpTo: self.getNewRandomRow()
-	          });
-	        }}, 
-	          "Jump to a random row: Row #", self.state.newRowToJumpTo.row, " (its height is ", self.state.fakeRows[self.state.newRowToJumpTo.row].height, ")"
-	        ), 
-	        React.createElement("button", {onClick: function (argument) {
-	          self.setState({
-	            fakeRows: getFakeRowsWithHeights(newNumberOfRowsToDisplay),
-	          });
-	        }}, 
-	          "Create ", newNumberOfRowsToDisplay, " new rows"
-	        ), 
-	        React.createElement(InfiniteScroller, {
-	              averageElementHeight: 100, //this is a guess you make!
-	              containerHeight: 600, 
-	              rowToJumpTo: this.state.rowToJumpTo, //(optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking 
-	              renderRow: renderRow, //function to render a row
-	              totalNumberOfRows: self.state.fakeRows.length, //an array of data for your rows
-	              preloadRowStart: 10}//if you want to start at a particular row to begin with
-	              )
-	      )
+	  render: function render() {
+	    var _this = this;
+
+	    var newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    return _react2['default'].createElement(
+	      'div',
+	      { overflow: 'scroll' },
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            _this.setState({
+	              rowToJumpTo: _this.state.newRowToJumpTo,
+	              newRowToJumpTo: _this.getNewRandomRow(_this.state.fakeRows.length)
+	            });
+	          } },
+	        'Jump to a random row: Row #',
+	        this.state.newRowToJumpTo.row,
+	        ' (its height is ',
+	        this.state.fakeRows[this.state.newRowToJumpTo.row].height,
+	        ')'
+	      ),
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            var newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
+	            _this.setState({
+	              fakeRows: newFakeRows,
+	              newRowToJumpTo: _this.getNewRandomRow(newFakeRows)
+	            });
+	          } },
+	        'Create ',
+	        newNumberOfRowsToDisplay,
+	        ' new rows'
+	      ),
+	      _react2['default'].createElement(_InfiniteScrollerJs2['default'], {
+	        averageElementHeight: 100, // this is a guess you make!
+	        containerHeight: 600,
+	        rowToJumpTo: this.state.rowToJumpTo, // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
+	        renderRow: this.renderRow, // function to render a row
+	        totalNumberOfRows: this.state.fakeRows.length, // an array of data for your rows
+	        preloadRowStart: 10 // if you want to start at a particular row to begin with
+	      })
+	    );
+	  },
+
+	  renderRow: function renderRow(rowNumber) {
+	    var heightOfRow = this.state.fakeRows[rowNumber].height;
+	    return _react2['default'].createElement(
+	      'div',
+	      {
+	        key: rowNumber,
+	        style: { height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange' }
+	      },
+	      heightOfRow
 	    );
 	  }
 	});
 
-	React.render(React.createElement(App, null), document.getElementById('container'));
+	_react2['default'].render(_react2['default'].createElement(App, null), document.getElementById('container'));
 
 /***/ },
 /* 1 */
@@ -151,15 +171,15 @@
 	var ReactContext = __webpack_require__(12);
 	var ReactCurrentOwner = __webpack_require__(17);
 	var ReactElement = __webpack_require__(11);
-	var ReactElementValidator = __webpack_require__(30);
+	var ReactElementValidator = __webpack_require__(32);
 	var ReactDOM = __webpack_require__(40);
 	var ReactDOMTextComponent = __webpack_require__(42);
 	var ReactDefaultInjection = __webpack_require__(91);
-	var ReactInstanceHandles = __webpack_require__(20);
+	var ReactInstanceHandles = __webpack_require__(19);
 	var ReactMount = __webpack_require__(67);
-	var ReactPerf = __webpack_require__(26);
+	var ReactPerf = __webpack_require__(28);
 	var ReactPropTypes = __webpack_require__(122);
-	var ReactReconciler = __webpack_require__(27);
+	var ReactReconciler = __webpack_require__(29);
 	var ReactServerRendering = __webpack_require__(154);
 
 	var assign = __webpack_require__(13);
@@ -1890,9 +1910,9 @@
 
 	var ReactElement = __webpack_require__(11);
 	var ReactFragment = __webpack_require__(10);
-	var ReactInstanceHandles = __webpack_require__(20);
+	var ReactInstanceHandles = __webpack_require__(19);
 
-	var getIteratorFn = __webpack_require__(19);
+	var getIteratorFn = __webpack_require__(21);
 	var invariant = __webpack_require__(7);
 	var warning = __webpack_require__(15);
 
@@ -2129,54 +2149,6 @@
 
 /***/ },
 /* 19 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getIteratorFn
-	 * @typechecks static-only
-	 */
-
-	'use strict';
-
-	/* global Symbol */
-	var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
-	var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
-
-	/**
-	 * Returns the iterator method function contained on the iterable object.
-	 *
-	 * Be sure to invoke the function with the iterable as context:
-	 *
-	 *     var iteratorFn = getIteratorFn(myIterable);
-	 *     if (iteratorFn) {
-	 *       var iterator = iteratorFn.call(myIterable);
-	 *       ...
-	 *     }
-	 *
-	 * @param {?object} maybeIterable
-	 * @return {?function}
-	 */
-	function getIteratorFn(maybeIterable) {
-	  var iteratorFn = maybeIterable && (
-	    (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL])
-	  );
-	  if (typeof iteratorFn === 'function') {
-	    return iteratorFn;
-	  }
-	}
-
-	module.exports = getIteratorFn;
-
-
-/***/ },
-/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -2193,7 +2165,7 @@
 
 	'use strict';
 
-	var ReactRootIndex = __webpack_require__(21);
+	var ReactRootIndex = __webpack_require__(20);
 
 	var invariant = __webpack_require__(7);
 
@@ -2515,7 +2487,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports) {
 
 	/**
@@ -2547,6 +2519,54 @@
 	};
 
 	module.exports = ReactRootIndex;
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getIteratorFn
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	/* global Symbol */
+	var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+	var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
+	/**
+	 * Returns the iterator method function contained on the iterable object.
+	 *
+	 * Be sure to invoke the function with the iterable as context:
+	 *
+	 *     var iteratorFn = getIteratorFn(myIterable);
+	 *     if (iteratorFn) {
+	 *       var iterator = iteratorFn.call(myIterable);
+	 *       ...
+	 *     }
+	 *
+	 * @param {?object} maybeIterable
+	 * @return {?function}
+	 */
+	function getIteratorFn(maybeIterable) {
+	  var iteratorFn = maybeIterable && (
+	    (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL])
+	  );
+	  if (typeof iteratorFn === 'function') {
+	    return iteratorFn;
+	  }
+	}
+
+	module.exports = getIteratorFn;
 
 
 /***/ },
@@ -2723,11 +2743,11 @@
 
 	'use strict';
 
-	var ReactLifeCycle = __webpack_require__(35);
+	var ReactLifeCycle = __webpack_require__(24);
 	var ReactCurrentOwner = __webpack_require__(17);
 	var ReactElement = __webpack_require__(11);
-	var ReactInstanceMap = __webpack_require__(36);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactInstanceMap = __webpack_require__(25);
+	var ReactUpdates = __webpack_require__(26);
 
 	var assign = __webpack_require__(13);
 	var invariant = __webpack_require__(7);
@@ -3010,6 +3030,100 @@
 
 /***/ },
 /* 24 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLifeCycle
+	 */
+
+	'use strict';
+
+	/**
+	 * This module manages the bookkeeping when a component is in the process
+	 * of being mounted or being unmounted. This is used as a way to enforce
+	 * invariants (or warnings) when it is not recommended to call
+	 * setState/forceUpdate.
+	 *
+	 * currentlyMountingInstance: During the construction phase, it is not possible
+	 * to trigger an update since the instance is not fully mounted yet. However, we
+	 * currently allow this as a convenience for mutating the initial state.
+	 *
+	 * currentlyUnmountingInstance: During the unmounting phase, the instance is
+	 * still mounted and can therefore schedule an update. However, this is not
+	 * recommended and probably an error since it's about to be unmounted.
+	 * Therefore we still want to trigger in an error for that case.
+	 */
+
+	var ReactLifeCycle = {
+	  currentlyMountingInstance: null,
+	  currentlyUnmountingInstance: null
+	};
+
+	module.exports = ReactLifeCycle;
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactInstanceMap
+	 */
+
+	'use strict';
+
+	/**
+	 * `ReactInstanceMap` maintains a mapping from a public facing stateful
+	 * instance (key) and the internal representation (value). This allows public
+	 * methods to accept the user facing instance as an argument and map them back
+	 * to internal methods.
+	 */
+
+	// TODO: Replace this with ES6: var ReactInstanceMap = new Map();
+	var ReactInstanceMap = {
+
+	  /**
+	   * This API should be called `delete` but we'd have to make sure to always
+	   * transform these to strings for IE support. When this transform is fully
+	   * supported we can rename it.
+	   */
+	  remove: function(key) {
+	    key._reactInternalInstance = undefined;
+	  },
+
+	  get: function(key) {
+	    return key._reactInternalInstance;
+	  },
+
+	  has: function(key) {
+	    return key._reactInternalInstance !== undefined;
+	  },
+
+	  set: function(key, value) {
+	    key._reactInternalInstance = value;
+	  }
+
+	};
+
+	module.exports = ReactInstanceMap;
+
+
+/***/ },
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3025,12 +3139,12 @@
 
 	'use strict';
 
-	var CallbackQueue = __webpack_require__(25);
+	var CallbackQueue = __webpack_require__(27);
 	var PooledClass = __webpack_require__(9);
 	var ReactCurrentOwner = __webpack_require__(17);
-	var ReactPerf = __webpack_require__(26);
-	var ReactReconciler = __webpack_require__(27);
-	var Transaction = __webpack_require__(34);
+	var ReactPerf = __webpack_require__(28);
+	var ReactReconciler = __webpack_require__(29);
+	var Transaction = __webpack_require__(36);
 
 	var assign = __webpack_require__(13);
 	var invariant = __webpack_require__(7);
@@ -3294,7 +3408,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3397,7 +3511,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3504,7 +3618,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3520,8 +3634,8 @@
 
 	'use strict';
 
-	var ReactRef = __webpack_require__(28);
-	var ReactElementValidator = __webpack_require__(30);
+	var ReactRef = __webpack_require__(30);
+	var ReactElementValidator = __webpack_require__(32);
 
 	/**
 	 * Helper to call ReactRef.attachRefs with this composite component, split out
@@ -3631,7 +3745,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3647,7 +3761,7 @@
 
 	'use strict';
 
-	var ReactOwner = __webpack_require__(29);
+	var ReactOwner = __webpack_require__(31);
 
 	var ReactRef = {};
 
@@ -3706,7 +3820,7 @@
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3821,7 +3935,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3846,12 +3960,12 @@
 
 	var ReactElement = __webpack_require__(11);
 	var ReactFragment = __webpack_require__(10);
-	var ReactPropTypeLocations = __webpack_require__(31);
-	var ReactPropTypeLocationNames = __webpack_require__(32);
+	var ReactPropTypeLocations = __webpack_require__(33);
+	var ReactPropTypeLocationNames = __webpack_require__(34);
 	var ReactCurrentOwner = __webpack_require__(17);
-	var ReactNativeComponent = __webpack_require__(33);
+	var ReactNativeComponent = __webpack_require__(35);
 
-	var getIteratorFn = __webpack_require__(19);
+	var getIteratorFn = __webpack_require__(21);
 	var invariant = __webpack_require__(7);
 	var warning = __webpack_require__(15);
 
@@ -4289,7 +4403,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4317,7 +4431,7 @@
 
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4348,7 +4462,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4458,7 +4572,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4702,100 +4816,6 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 35 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactLifeCycle
-	 */
-
-	'use strict';
-
-	/**
-	 * This module manages the bookkeeping when a component is in the process
-	 * of being mounted or being unmounted. This is used as a way to enforce
-	 * invariants (or warnings) when it is not recommended to call
-	 * setState/forceUpdate.
-	 *
-	 * currentlyMountingInstance: During the construction phase, it is not possible
-	 * to trigger an update since the instance is not fully mounted yet. However, we
-	 * currently allow this as a convenience for mutating the initial state.
-	 *
-	 * currentlyUnmountingInstance: During the unmounting phase, the instance is
-	 * still mounted and can therefore schedule an update. However, this is not
-	 * recommended and probably an error since it's about to be unmounted.
-	 * Therefore we still want to trigger in an error for that case.
-	 */
-
-	var ReactLifeCycle = {
-	  currentlyMountingInstance: null,
-	  currentlyUnmountingInstance: null
-	};
-
-	module.exports = ReactLifeCycle;
-
-
-/***/ },
-/* 36 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactInstanceMap
-	 */
-
-	'use strict';
-
-	/**
-	 * `ReactInstanceMap` maintains a mapping from a public facing stateful
-	 * instance (key) and the internal representation (value). This allows public
-	 * methods to accept the user facing instance as an argument and map them back
-	 * to internal methods.
-	 */
-
-	// TODO: Replace this with ES6: var ReactInstanceMap = new Map();
-	var ReactInstanceMap = {
-
-	  /**
-	   * This API should be called `delete` but we'd have to make sure to always
-	   * transform these to strings for IE support. When this transform is fully
-	   * supported we can rename it.
-	   */
-	  remove: function(key) {
-	    key._reactInternalInstance = undefined;
-	  },
-
-	  get: function(key) {
-	    return key._reactInternalInstance;
-	  },
-
-	  has: function(key) {
-	    return key._reactInternalInstance !== undefined;
-	  },
-
-	  set: function(key, value) {
-	    key._reactInternalInstance = value;
-	  }
-
-	};
-
-	module.exports = ReactInstanceMap;
-
-
-/***/ },
 /* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -4816,10 +4836,10 @@
 	var ReactCurrentOwner = __webpack_require__(17);
 	var ReactElement = __webpack_require__(11);
 	var ReactErrorUtils = __webpack_require__(38);
-	var ReactInstanceMap = __webpack_require__(36);
-	var ReactLifeCycle = __webpack_require__(35);
-	var ReactPropTypeLocations = __webpack_require__(31);
-	var ReactPropTypeLocationNames = __webpack_require__(32);
+	var ReactInstanceMap = __webpack_require__(25);
+	var ReactLifeCycle = __webpack_require__(24);
+	var ReactPropTypeLocations = __webpack_require__(33);
+	var ReactPropTypeLocationNames = __webpack_require__(34);
 	var ReactUpdateQueue = __webpack_require__(23);
 
 	var assign = __webpack_require__(13);
@@ -5839,7 +5859,7 @@
 	'use strict';
 
 	var ReactElement = __webpack_require__(11);
-	var ReactElementValidator = __webpack_require__(30);
+	var ReactElementValidator = __webpack_require__(32);
 
 	var mapObject = __webpack_require__(41);
 
@@ -6828,7 +6848,7 @@
 	var DOMChildrenOperations = __webpack_require__(58);
 	var DOMPropertyOperations = __webpack_require__(43);
 	var ReactMount = __webpack_require__(67);
-	var ReactPerf = __webpack_require__(26);
+	var ReactPerf = __webpack_require__(28);
 
 	var invariant = __webpack_require__(7);
 	var setInnerHTML = __webpack_require__(66);
@@ -8508,15 +8528,15 @@
 	var ReactBrowserEventEmitter = __webpack_require__(68);
 	var ReactCurrentOwner = __webpack_require__(17);
 	var ReactElement = __webpack_require__(11);
-	var ReactElementValidator = __webpack_require__(30);
+	var ReactElementValidator = __webpack_require__(32);
 	var ReactEmptyComponent = __webpack_require__(76);
-	var ReactInstanceHandles = __webpack_require__(20);
-	var ReactInstanceMap = __webpack_require__(36);
+	var ReactInstanceHandles = __webpack_require__(19);
+	var ReactInstanceMap = __webpack_require__(25);
 	var ReactMarkupChecksum = __webpack_require__(77);
-	var ReactPerf = __webpack_require__(26);
-	var ReactReconciler = __webpack_require__(27);
+	var ReactPerf = __webpack_require__(28);
+	var ReactReconciler = __webpack_require__(29);
 	var ReactUpdateQueue = __webpack_require__(23);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactUpdates = __webpack_require__(26);
 
 	var emptyObject = __webpack_require__(14);
 	var containsNode = __webpack_require__(79);
@@ -10580,7 +10600,7 @@
 	'use strict';
 
 	var ReactElement = __webpack_require__(11);
-	var ReactInstanceMap = __webpack_require__(36);
+	var ReactInstanceMap = __webpack_require__(25);
 
 	var invariant = __webpack_require__(7);
 
@@ -10917,7 +10937,7 @@
 
 	var ReactCompositeComponent = __webpack_require__(84);
 	var ReactEmptyComponent = __webpack_require__(76);
-	var ReactNativeComponent = __webpack_require__(33);
+	var ReactNativeComponent = __webpack_require__(35);
 
 	var assign = __webpack_require__(13);
 	var invariant = __webpack_require__(7);
@@ -11059,15 +11079,15 @@
 	var ReactContext = __webpack_require__(12);
 	var ReactCurrentOwner = __webpack_require__(17);
 	var ReactElement = __webpack_require__(11);
-	var ReactElementValidator = __webpack_require__(30);
-	var ReactInstanceMap = __webpack_require__(36);
-	var ReactLifeCycle = __webpack_require__(35);
-	var ReactNativeComponent = __webpack_require__(33);
-	var ReactPerf = __webpack_require__(26);
-	var ReactPropTypeLocations = __webpack_require__(31);
-	var ReactPropTypeLocationNames = __webpack_require__(32);
-	var ReactReconciler = __webpack_require__(27);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactElementValidator = __webpack_require__(32);
+	var ReactInstanceMap = __webpack_require__(25);
+	var ReactLifeCycle = __webpack_require__(24);
+	var ReactNativeComponent = __webpack_require__(35);
+	var ReactPerf = __webpack_require__(28);
+	var ReactPropTypeLocations = __webpack_require__(33);
+	var ReactPropTypeLocationNames = __webpack_require__(34);
+	var ReactReconciler = __webpack_require__(29);
+	var ReactUpdates = __webpack_require__(26);
 
 	var assign = __webpack_require__(13);
 	var emptyObject = __webpack_require__(14);
@@ -12153,7 +12173,7 @@
 	  __webpack_require__(47);
 	var ReactMount = __webpack_require__(67);
 	var ReactMultiChild = __webpack_require__(88);
-	var ReactPerf = __webpack_require__(26);
+	var ReactPerf = __webpack_require__(28);
 
 	var assign = __webpack_require__(13);
 	var escapeTextContentForBrowser = __webpack_require__(46);
@@ -12659,7 +12679,7 @@
 	var ReactComponentEnvironment = __webpack_require__(85);
 	var ReactMultiChildUpdateTypes = __webpack_require__(64);
 
-	var ReactReconciler = __webpack_require__(27);
+	var ReactReconciler = __webpack_require__(29);
 	var ReactChildReconciler = __webpack_require__(89);
 
 	/**
@@ -13090,7 +13110,7 @@
 
 	'use strict';
 
-	var ReactReconciler = __webpack_require__(27);
+	var ReactReconciler = __webpack_require__(29);
 
 	var flattenChildren = __webpack_require__(90);
 	var instantiateReactComponent = __webpack_require__(83);
@@ -13308,7 +13328,7 @@
 	var ReactElement = __webpack_require__(11);
 	var ReactEventListener = __webpack_require__(126);
 	var ReactInjection = __webpack_require__(129);
-	var ReactInstanceHandles = __webpack_require__(20);
+	var ReactInstanceHandles = __webpack_require__(19);
 	var ReactMount = __webpack_require__(67);
 	var ReactReconcileTransaction = __webpack_require__(130);
 	var SelectEventPlugin = __webpack_require__(136);
@@ -14531,7 +14551,7 @@
 	var EventPluginHub = __webpack_require__(69);
 	var EventPropagators = __webpack_require__(93);
 	var ExecutionEnvironment = __webpack_require__(51);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactUpdates = __webpack_require__(26);
 	var SyntheticEvent = __webpack_require__(97);
 
 	var isEventSupported = __webpack_require__(75);
@@ -15692,7 +15712,7 @@
 	'use strict';
 
 	var ReactCurrentOwner = __webpack_require__(17);
-	var ReactInstanceMap = __webpack_require__(36);
+	var ReactInstanceMap = __webpack_require__(25);
 	var ReactMount = __webpack_require__(67);
 
 	var invariant = __webpack_require__(7);
@@ -15766,8 +15786,8 @@
 
 	'use strict';
 
-	var ReactUpdates = __webpack_require__(24);
-	var Transaction = __webpack_require__(34);
+	var ReactUpdates = __webpack_require__(26);
+	var Transaction = __webpack_require__(36);
 
 	var assign = __webpack_require__(13);
 	var emptyFunction = __webpack_require__(16);
@@ -16194,7 +16214,7 @@
 	var ReactClass = __webpack_require__(37);
 	var ReactElement = __webpack_require__(11);
 	var ReactMount = __webpack_require__(67);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactUpdates = __webpack_require__(26);
 
 	var assign = __webpack_require__(13);
 	var invariant = __webpack_require__(7);
@@ -16528,7 +16548,7 @@
 
 	var ReactElement = __webpack_require__(11);
 	var ReactFragment = __webpack_require__(10);
-	var ReactPropTypeLocationNames = __webpack_require__(32);
+	var ReactPropTypeLocationNames = __webpack_require__(34);
 
 	var emptyFunction = __webpack_require__(16);
 
@@ -16939,7 +16959,7 @@
 	var ReactBrowserComponentMixin = __webpack_require__(110);
 	var ReactClass = __webpack_require__(37);
 	var ReactElement = __webpack_require__(11);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactUpdates = __webpack_require__(26);
 
 	var assign = __webpack_require__(13);
 
@@ -17122,7 +17142,7 @@
 	var ReactBrowserComponentMixin = __webpack_require__(110);
 	var ReactClass = __webpack_require__(37);
 	var ReactElement = __webpack_require__(11);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactUpdates = __webpack_require__(26);
 
 	var assign = __webpack_require__(13);
 	var invariant = __webpack_require__(7);
@@ -17263,9 +17283,9 @@
 	var EventListener = __webpack_require__(127);
 	var ExecutionEnvironment = __webpack_require__(51);
 	var PooledClass = __webpack_require__(9);
-	var ReactInstanceHandles = __webpack_require__(20);
+	var ReactInstanceHandles = __webpack_require__(19);
 	var ReactMount = __webpack_require__(67);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactUpdates = __webpack_require__(26);
 
 	var assign = __webpack_require__(13);
 	var getEventTarget = __webpack_require__(98);
@@ -17589,11 +17609,11 @@
 	var ReactClass = __webpack_require__(37);
 	var ReactEmptyComponent = __webpack_require__(76);
 	var ReactBrowserEventEmitter = __webpack_require__(68);
-	var ReactNativeComponent = __webpack_require__(33);
+	var ReactNativeComponent = __webpack_require__(35);
 	var ReactDOMComponent = __webpack_require__(87);
-	var ReactPerf = __webpack_require__(26);
-	var ReactRootIndex = __webpack_require__(21);
-	var ReactUpdates = __webpack_require__(24);
+	var ReactPerf = __webpack_require__(28);
+	var ReactRootIndex = __webpack_require__(20);
+	var ReactUpdates = __webpack_require__(26);
 
 	var ReactInjection = {
 	  Component: ReactComponentEnvironment.injection,
@@ -17630,12 +17650,12 @@
 
 	'use strict';
 
-	var CallbackQueue = __webpack_require__(25);
+	var CallbackQueue = __webpack_require__(27);
 	var PooledClass = __webpack_require__(9);
 	var ReactBrowserEventEmitter = __webpack_require__(68);
 	var ReactInputSelection = __webpack_require__(131);
 	var ReactPutListenerQueue = __webpack_require__(135);
-	var Transaction = __webpack_require__(34);
+	var Transaction = __webpack_require__(36);
 
 	var assign = __webpack_require__(13);
 
@@ -18622,17 +18642,17 @@
 	var EventConstants = __webpack_require__(5);
 	var EventPluginUtils = __webpack_require__(4);
 	var EventPropagators = __webpack_require__(93);
-	var SyntheticClipboardEvent = __webpack_require__(141);
+	var SyntheticClipboardEvent = __webpack_require__(140);
 	var SyntheticEvent = __webpack_require__(97);
-	var SyntheticFocusEvent = __webpack_require__(142);
-	var SyntheticKeyboardEvent = __webpack_require__(143);
+	var SyntheticFocusEvent = __webpack_require__(141);
+	var SyntheticKeyboardEvent = __webpack_require__(142);
 	var SyntheticMouseEvent = __webpack_require__(105);
-	var SyntheticDragEvent = __webpack_require__(140);
+	var SyntheticDragEvent = __webpack_require__(145);
 	var SyntheticTouchEvent = __webpack_require__(146);
 	var SyntheticUIEvent = __webpack_require__(106);
 	var SyntheticWheelEvent = __webpack_require__(147);
 
-	var getEventCharCode = __webpack_require__(144);
+	var getEventCharCode = __webpack_require__(143);
 
 	var invariant = __webpack_require__(7);
 	var keyOf = __webpack_require__(39);
@@ -19045,49 +19065,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule SyntheticDragEvent
-	 * @typechecks static-only
-	 */
-
-	'use strict';
-
-	var SyntheticMouseEvent = __webpack_require__(105);
-
-	/**
-	 * @interface DragEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var DragEventInterface = {
-	  dataTransfer: null
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticMouseEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
-
-	module.exports = SyntheticDragEvent;
-
-
-/***/ },
-/* 141 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
 	 * @providesModule SyntheticClipboardEvent
 	 * @typechecks static-only
 	 */
@@ -19126,7 +19103,7 @@
 
 
 /***/ },
-/* 142 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19169,7 +19146,7 @@
 
 
 /***/ },
-/* 143 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19188,8 +19165,8 @@
 
 	var SyntheticUIEvent = __webpack_require__(106);
 
-	var getEventCharCode = __webpack_require__(144);
-	var getEventKey = __webpack_require__(145);
+	var getEventCharCode = __webpack_require__(143);
+	var getEventKey = __webpack_require__(144);
 	var getEventModifierState = __webpack_require__(107);
 
 	/**
@@ -19260,7 +19237,7 @@
 
 
 /***/ },
-/* 144 */
+/* 143 */
 /***/ function(module, exports) {
 
 	/**
@@ -19316,7 +19293,7 @@
 
 
 /***/ },
-/* 145 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19333,7 +19310,7 @@
 
 	'use strict';
 
-	var getEventCharCode = __webpack_require__(144);
+	var getEventCharCode = __webpack_require__(143);
 
 	/**
 	 * Normalization of deprecated HTML5 `key` values
@@ -19422,6 +19399,49 @@
 	}
 
 	module.exports = getEventKey;
+
+
+/***/ },
+/* 145 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticDragEvent
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	var SyntheticMouseEvent = __webpack_require__(105);
+
+	/**
+	 * @interface DragEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var DragEventInterface = {
+	  dataTransfer: null
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticMouseEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
+
+	module.exports = SyntheticDragEvent;
 
 
 /***/ },
@@ -19725,7 +19745,7 @@
 	var DOMProperty = __webpack_require__(44);
 	var ReactDefaultPerfAnalysis = __webpack_require__(151);
 	var ReactMount = __webpack_require__(67);
-	var ReactPerf = __webpack_require__(26);
+	var ReactPerf = __webpack_require__(28);
 
 	var performanceNow = __webpack_require__(152);
 
@@ -20266,7 +20286,7 @@
 	'use strict';
 
 	var ReactElement = __webpack_require__(11);
-	var ReactInstanceHandles = __webpack_require__(20);
+	var ReactInstanceHandles = __webpack_require__(19);
 	var ReactMarkupChecksum = __webpack_require__(77);
 	var ReactServerRenderingTransaction =
 	  __webpack_require__(155);
@@ -20352,9 +20372,9 @@
 	'use strict';
 
 	var PooledClass = __webpack_require__(9);
-	var CallbackQueue = __webpack_require__(25);
+	var CallbackQueue = __webpack_require__(27);
 	var ReactPutListenerQueue = __webpack_require__(135);
-	var Transaction = __webpack_require__(34);
+	var Transaction = __webpack_require__(36);
 
 	var assign = __webpack_require__(13);
 	var emptyFunction = __webpack_require__(16);
@@ -20497,37 +20517,50 @@
 /* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var areNonNegativeIntegers = __webpack_require__(158);
+	'use strict';
 
-	var InfiniteScoller = React.createClass({displayName: "InfiniteScoller",
+	exports.__esModule = true;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _validateIoNonnegativeIntegerArray = __webpack_require__(158);
+
+	var _validateIoNonnegativeIntegerArray2 = _interopRequireDefault(_validateIoNonnegativeIntegerArray);
+
+	var InfiniteScoller = _react2['default'].createClass({
+	  displayName: 'InfiniteScoller',
+
 	  propTypes: {
-	    averageElementHeight: React.PropTypes.number.isRequired,
-	    containerHeight: React.PropTypes.number.isRequired,
-	    preloadRowStart: React.PropTypes.number.isRequired,
-	    totalNumberOfRows: React.PropTypes.number.isRequired,
-	    renderRow: React.PropTypes.func.isRequired,
-	    rowToJumpTo: React.PropTypes.shape({
-	      row: React.PropTypes.number,
-	    }),
+	    averageElementHeight: _react2['default'].PropTypes.number.isRequired,
+	    containerHeight: _react2['default'].PropTypes.number.isRequired,
+	    preloadRowStart: _react2['default'].PropTypes.number.isRequired,
+	    totalNumberOfRows: _react2['default'].PropTypes.number.isRequired,
+	    renderRow: _react2['default'].PropTypes.func.isRequired,
+	    rowToJumpTo: _react2['default'].PropTypes.shape({
+	      row: _react2['default'].PropTypes.number
+	    })
 	  },
-	  
-	  onEditorScroll: function(event) {
-	    //tnr: we should maybe keep this implemented..
+
+	  onEditorScroll: function onEditorScroll(event) {
+	    // tnr: we should maybe keep this implemented..
 	    if (this.adjustmentScroll) {
-	      //adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
+	      // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
 	      this.adjustmentScroll = false;
 	      return;
 	    }
 
 	    var infiniteContainer = event.currentTarget;
-	    var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
-	    var currentAverageElementHeight = (visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length);
+	    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
+	    var currentAverageElementHeight = visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length;
 	    this.oldRowStart = this.rowStart;
-	    var newRowStart;
 	    var distanceFromTopOfVisibleRows = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
 	    var distanceFromBottomOfVisibleRows = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
-	    var rowsToAdd;
+	    var newRowStart = undefined;
+	    var rowsToAdd = undefined;
 	    if (distanceFromTopOfVisibleRows < 0) {
 	      if (this.rowStart > 0) {
 	        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / currentAverageElementHeight);
@@ -20535,61 +20568,58 @@
 
 	        if (newRowStart < 0) {
 	          newRowStart = 0;
-	        } 
+	        }
 
 	        this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
 	      }
 	    } else if (distanceFromBottomOfVisibleRows < 0) {
-	      //scrolling down, so add a row below
+	      // scrolling down, so add a row below
 	      var rowsToGiveOnBottom = this.props.totalNumberOfRows - 1 - this.rowEnd;
 	      if (rowsToGiveOnBottom > 0) {
 	        rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / currentAverageElementHeight);
 	        newRowStart = this.rowStart + rowsToAdd;
 
 	        if (newRowStart + this.state.visibleRows.length >= this.props.totalNumberOfRows) {
-	          //the new row start is too high, so we instead just append the max rowsToGiveOnBottom to our current preloadRowStart
+	          // the new row start is too high, so we instead just append the max rowsToGiveOnBottom to our current preloadRowStart
 	          newRowStart = this.rowStart + rowsToGiveOnBottom;
 	        }
 	        this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
 	      }
-	    } else {
-	      //we haven't scrolled enough, so do nothing
+	    } else {// eslint-disable-line no-empty
+	      // we haven't scrolled enough, so do nothing
 	    }
 	    this.updateTriggeredByScroll = true;
-	    //set the averageElementHeight to the currentAverageElementHeight
+	    // set the averageElementHeight to the currentAverageElementHeight
 	    // setAverageRowHeight(currentAverageElementHeight);
 	  },
 
-	  componentWillReceiveProps: function(nextProps) {
-	    var newNumberOfRowsToDisplay = this.state.visibleRows.length;
-	    if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
-	      console.log('huut');
-	      this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
-	      this.rowJumpTriggered = true;
-	      this.rowJumpedTo = nextProps.rowToJumpTo.row;
-	    }
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    // if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
 	    //   this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
 	    //   this.rowJumpTriggered = true;
 	    //   this.rowJumpedTo = nextProps.rowToJumpTo;
-	    // } 
-	    else {
+	    // }
+	    var newNumberOfRowsToDisplay = this.state.visibleRows.length;
+	    if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
+	      this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
+	      this.rowJumpTriggered = true;
+	      this.rowJumpedTo = nextProps.rowToJumpTo.row;
+	    } else {
 	      var rowStart = this.rowStart;
-	      //we need to set the new totalNumber of rows prop here before calling prepare visible rows
-	      //so that prepare visible rows knows how many rows it has to work with
+	      // we need to set the new totalNumber of rows prop here before calling prepare visible rows
+	      // so that prepare visible rows knows how many rows it has to work with
 	      this.props.totalNumberOfRows = nextProps.totalNisiblenumberOfRows;
 	      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
 	    }
 	  },
 
-	  componentWillUpdate: function() {
-	    var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
+	  componentWillUpdate: function componentWillUpdate() {
+	    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
 	    this.soonToBeRemovedRowElementHeights = 0;
 	    this.numberOfRowsAddedToTop = 0;
 	    if (this.updateTriggeredByScroll === true) {
 	      this.updateTriggeredByScroll = false;
 	      var rowStartDifference = this.oldRowStart - this.rowStart;
-	      // console.log('rowStartDifference', rowStartDifference);
 	      if (rowStartDifference < 0) {
 	        // scrolling down
 	        for (var i = 0; i < -rowStartDifference; i++) {
@@ -20602,32 +20632,30 @@
 	          }
 	        }
 	      } else if (rowStartDifference > 0) {
-	        // console.log('rowStartDifference', rowStartDifference);
-	        this.numberOfRowsAddedToTop = rowStartDifference;
-	      }
+	          // console.log('rowStartDifference', rowStartDifference);
+	          this.numberOfRowsAddedToTop = rowStartDifference;
+	        }
 	    }
 	  },
 
-	  componentDidUpdate: function() {
-	    //strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
-	    //thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we 
-	    //make the replacements
-	    var infiniteContainer = React.findDOMNode(this.refs.infiniteContainer);
-	    var visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
-	    var self = this;
+	  componentDidUpdate: function componentDidUpdate() {
+	    // strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
+	    // thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we
+	    // make the replacements
+	    var infiniteContainer = _react2['default'].findDOMNode(this.refs.infiniteContainer);
+	    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
 	    if (this.soonToBeRemovedRowElementHeights) {
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeights;
 	    }
 	    if (this.numberOfRowsAddedToTop) {
-	      //we're adding rows to the top, so we're going from 100's to random heights, so we'll calculate the differenece
-	      //and adjust the infiniteContainer.scrollTop by it
+	      // we're adding rows to the top, so we're going from 100's to random heights, so we'll calculate the differenece
+	      // and adjust the infiniteContainer.scrollTop by it
 	      var adjustmentScroll = 0;
 
 	      for (var i = 0; i < this.numberOfRowsAddedToTop; i++) {
 	        var justAddedElement = visibleRowsContainer.children[i];
 	        if (justAddedElement) {
 	          adjustmentScroll += this.props.averageElementHeight - justAddedElement.getBoundingClientRect().height;
-	          var height = justAddedElement.getBoundingClientRect().height;
 	        }
 	      }
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustmentScroll;
@@ -20635,59 +20663,54 @@
 
 	    if (!visibleRowsContainer.childNodes[0]) {
 	      if (this.props.totalNumberOfRows) {
-	        //we've probably made it here because a bunch of rows have been removed all at once
-	        //and the visible rows isn't mapping to the row data, so we need to shift the visible rows
+	        // we've probably made it here because a bunch of rows have been removed all at once
+	        // and the visible rows isn't mapping to the row data, so we need to shift the visible rows
 	        var numberOfRowsToDisplay = this.numberOfRowsToDisplay || 4;
 	        var newRowStart = this.props.totalNumberOfRows - numberOfRowsToDisplay;
-	        if (!areNonNegativeIntegers([newRowStart])) {
+	        if (!_validateIoNonnegativeIntegerArray2['default']([newRowStart])) {
 	          newRowStart = 0;
 	        }
-	        this.prepareVisibleRows(newRowStart , numberOfRowsToDisplay);
-	        return; //return early because we need to recompute the visible rows
-	      } else {
-	        throw new Error('no visible rows!!');
+	        this.prepareVisibleRows(newRowStart, numberOfRowsToDisplay);
+	        return; // return early because we need to recompute the visible rows
 	      }
+	      throw new Error('no visible rows!!');
 	    }
 
-	    var adjustInfiniteContainerByThisAmount;
-	    
-	    //if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
+	    var adjustInfiniteContainerByThisAmount = undefined;
+
+	    // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
 	    if (this.rowJumpTriggered) {
 	      this.rowJumpTriggered = false;
 	      if (this.rowJumpedTo === this.state.visibleRows[0]) {
-	        //we've successfully jumped to that row as the top row!
-	        //but it probably needs to be adjusted to be centered/at the top of the users viewport
-	        console.log('hoorah!');
+	        // we've successfully jumped to that row as the top row!
+	        // but it probably needs to be adjusted to be centered/at the top of the users viewport
 	        adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
 	        infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
-	      } else {
-	        console.log('nein!');
 	      }
 	    }
-
-	    //check if the visible rows fill up the viewport
-	    //tnrtodo: maybe put logic in here to reshrink the number of rows to display... maybe...
+	    // check if the visible rows fill up the viewport
+	    // tnrtodo: maybe put logic in here to reshrink the number of rows to display... maybe...
 	    if (visibleRowsContainer.getBoundingClientRect().height / 2 <= this.props.containerHeight) {
-	      //visible rows don't yet fill up the viewport, so we need to add rows
+	      // visible rows don't yet fill up the viewport, so we need to add rows
 	      if (this.rowStart + this.state.visibleRows.length < this.props.totalNumberOfRows) {
-	        //load another row to the bottom
+	        // load another row to the bottom
 	        this.prepareVisibleRows(this.rowStart, this.state.visibleRows.length + 1);
 	      } else {
-	        //there aren't more rows that we can load at the bottom so we load more at the top
+	        // there aren't more rows that we can load at the bottom so we load more at the top
 	        if (this.rowStart - 1 > 0) {
-	          this.prepareVisibleRows(this.rowStart - 1, this.state.visibleRows.length + 1); //don't want to just shift view
+	          this.prepareVisibleRows(this.rowStart - 1, this.state.visibleRows.length + 1); // don't want to just shift view
 	        } else if (this.state.visibleRows.length < this.props.totalNumberOfRows) {
-	          this.prepareVisibleRows(0, this.state.visibleRows.length + 1);
-	        }
+	            this.prepareVisibleRows(0, this.state.visibleRows.length + 1);
+	          }
 	      }
 	    } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
-	      //scroll to align the tops of the boxes
+	      // scroll to align the tops of the boxes
 	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
 	      // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: '+adjustInfiniteContainerByThisAmount)
 	      //   this.adjustmentScroll = true;
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
 	    } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
-	      //scroll to align the bottoms of the boxes
+	      // scroll to align the bottoms of the boxes
 	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
 	      //   console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
 	      //   this.adjustmentScroll = true;
@@ -20695,8 +20718,8 @@
 	    }
 	  },
 
-	  componentWillMount: function(argument) {
-	    //this is the only place where we use preloadRowStart
+	  componentWillMount: function componentWillMount() {
+	    // this is the only place where we use preloadRowStart
 	    var newRowStart = 0;
 	    if (this.props.preloadRowStart < this.props.totalNumberOfRows) {
 	      newRowStart = this.props.preloadRowStart;
@@ -20704,13 +20727,15 @@
 	    this.prepareVisibleRows(newRowStart, 4);
 	  },
 
-	  componentDidMount: function(argument) {
-	    //call componentDidUpdate so that the scroll position will be adjusted properly
-	    //(we may load a random row in the middle of the sequence and not have the infinte container scrolled properly initially, so we scroll to the show the rowContainer)
+	  componentDidMount: function componentDidMount() {
+	    // call componentDidUpdate so that the scroll position will be adjusted properly
+	    // (we may load a random row in the middle of the sequence and not have the infinte container scrolled properly
+	    // initially, so we scroll to the show the rowContainer)
 	    this.componentDidUpdate();
 	  },
 
-	  prepareVisibleRows: function(rowStart, newNumberOfRowsToDisplay) { //note, rowEnd is optional
+	  prepareVisibleRows: function prepareVisibleRows(rowStart, newNumberOfRowsToDisplay) {
+	    // note, rowEnd is optional
 	    this.numberOfRowsToDisplay = newNumberOfRowsToDisplay;
 	    if (rowStart + newNumberOfRowsToDisplay > this.props.totalNumberOfRows) {
 	      this.rowEnd = this.props.totalNumberOfRows - 1;
@@ -20722,9 +20747,8 @@
 	    // rowData.slice(rowStart, this.rowEnd + 1);
 	    // setPreloadRowStart(rowStart);
 	    this.rowStart = rowStart;
-	    if (!areNonNegativeIntegers([this.rowStart, this.rowEnd])) {
-	      var e = new Error('Error: row start or end invalid!');
-	      throw e;
+	    if (!_validateIoNonnegativeIntegerArray2['default']([this.rowStart, this.rowEnd])) {
+	      throw new Error('Error: row start or end invalid!');
 	    }
 	    var newVisibleRows = [];
 	    for (var i = this.rowStart; i <= this.rowEnd; i++) {
@@ -20735,16 +20759,17 @@
 	      visibleRows: newVisibleRows
 	    });
 	  },
-	  getVisibleRowsContainerDomNode: function() {
-	    return this.refs.visibleRowsContainer.getDOMNode();
+
+	  // public method
+	  getVisibleRowsContainerDomNode: function getVisibleRowsContainerDomNode() {
+	    return _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
 	  },
 
+	  render: function render() {
+	    var _this = this;
 
-	  render: function() {
-	    var self = this;
-
-	    var rowItems = this.state.visibleRows.map(function(rowNumber) {
-	      return self.props.renderRow(rowNumber);
+	    var rowItems = this.state.visibleRows.map(function (i) {
+	      return _this.props.renderRow(i);
 	    });
 
 	    var rowHeight = this.currentAverageElementHeight ? this.currentAverageElementHeight : this.props.averageElementHeight;
@@ -20753,27 +20778,30 @@
 
 	    var infiniteContainerStyle = {
 	      height: this.props.containerHeight,
-	      overflowY: "scroll",
+	      overflowY: 'scroll'
 	    };
 
-	    return (
-	      React.createElement("div", {
-	        ref: "infiniteContainer", 
-	        className: "infiniteContainer", 
-	        style: infiniteContainerStyle, 
+	    return _react2['default'].createElement(
+	      'div',
+	      {
+	        ref: 'infiniteContainer',
+	        className: 'infiniteContainer',
+	        style: infiniteContainerStyle,
 	        onScroll: this.onEditorScroll
-	        }, 
-	          React.createElement("div", {ref: "topSpacer", className: "topSpacer", style: {height: this.topSpacerHeight}}), 
-	          React.createElement("div", {ref: "visibleRowsContainer", className: "visibleRowsContainer"}, 
-	            rowItems
-	          ), 
-	          React.createElement("div", {ref: "bottomSpacer", className: "bottomSpacer", style: {height: this.bottomSpacerHeight}})
-	      )
+	      },
+	      _react2['default'].createElement('div', { className: 'topSpacer', style: { height: this.topSpacerHeight } }),
+	      _react2['default'].createElement(
+	        'div',
+	        { ref: 'visibleRowsContainer', className: 'visibleRowsContainer' },
+	        rowItems
+	      ),
+	      _react2['default'].createElement('div', { ref: 'bottomSpacer', className: 'bottomSpacer', style: { height: this.bottomSpacerHeight } })
 	    );
 	  }
 	});
 
-	module.exports = InfiniteScoller;
+	exports['default'] = InfiniteScoller;
+	module.exports = exports['default'];
 
 /***/ },
 /* 158 */
