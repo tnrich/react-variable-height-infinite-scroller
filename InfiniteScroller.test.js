@@ -1,29 +1,24 @@
-jest.dontMock('../InfiniteScroller');
+// var jsdom = require('jsdom-compat');
+// require('testdom')('<html><body></body></html>')
 
-import React from 'react/addons';
-const InfiniteScroller = require('../InfiniteScroller');
-var TestUtils = React.addons.TestUtils;
-
-describe('InfiniteScroller', () => {
-
-  it('changes the text after click', () => {
-
-    // Render a checkbox with label in the document
-    var checkbox = TestUtils.renderIntoDocument(
-      <App />
-    );
-
-    var checkboxNode = React.findDOMNode(checkbox);
-
-    // Verify that it's Off by default
-    expect(checkboxNode.textContent).toEqual('Off');
-
-    // Simulate a click and verify that it is now On
-    TestUtils.Simulate.change(TestUtils.findRenderedDOMComponentWithTag(checkbox, 'input'));
-    expect(checkboxNode.textContent).toEqual('On');
-  });
-
+// console.log('global.window: ' + global.window);
+// console.log('global.document: ' + global.document);
+// import React from 'react';
+// // const React = require('react')
+// // require('react/addons');
+// // let TestUtils = React.addons.TestUtils;
+// import testTree from 'react-test-tree';
+// var jsdom = require('mocha-jsdom')
+test('pause', function(t) {
+  window.cont = t.end
 });
+
+import InfiniteScroller from './InfiniteScroller.js';
+// var bro = require('jsdom-test-browser'),
+        // assert = require('assert'),
+import React from 'react';
+import test from 'tape';
+let TestUtils = require('react/addons').addons.TestUtils;
 
 function getFakeRowsWithHeights(numberOfRows) {
   let newFakeRows = [];
@@ -92,4 +87,32 @@ const App = React.createClass({
       </div>
     );
   },
+});
+
+// describe('InfiniteScroller', function() {
+//   it('should render an infinite scroller', function() {
+//     // let appTree = testTree(<App/>);
+//     let renderedComponent = TestUtils.renderIntoDocument(
+//           <App/>
+//         );
+//     console.log('renderedComponent: ', renderedComponent);
+//       // appTree.infScroller.getDOMNode();
+//   });
+// });
+test('InfiniteScroller', function (t) {
+    t.plan(2);
+    debugger;
+    let renderedComponent = TestUtils.renderIntoDocument(
+          <App/>
+        );
+    console.log('renderedComponent: ', renderedComponent);
+    let node = React.findDOMNode(renderedComponent.refs.infScroller.refs.infiniteContainer);
+    TestUtils.Simulate.scroll();
+
+   t.equal(typeof Date.now, 'function');
+    var start = Date.now();
+
+    setTimeout(function () {
+        t.equal(Date.now() - start, 100);
+    }, 100);
 });
