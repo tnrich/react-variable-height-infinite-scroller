@@ -30,9 +30,11 @@ var InfiniteScoller = _react2['default'].createClass({
     onScroll: _react.PropTypes.func
   },
 
-  defaultProps: {
-    onScroll: noop,
-    containerClassName: 'infiniteContainer'
+  getDefaultProps: function getDefaultProps() {
+    return {
+      onScroll: noop,
+      containerClassName: 'infiniteContainer'
+    };
   },
 
   onEditorScroll: function onEditorScroll(event) {

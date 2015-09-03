@@ -1,5 +1,29 @@
-import React from 'react';
-import InfiniteScroller from './InfiniteScroller.js';
+jest.dontMock('../InfiniteScroller');
+
+import React from 'react/addons';
+const InfiniteScroller = require('../InfiniteScroller');
+var TestUtils = React.addons.TestUtils;
+
+describe('InfiniteScroller', () => {
+
+  it('changes the text after click', () => {
+
+    // Render a checkbox with label in the document
+    var checkbox = TestUtils.renderIntoDocument(
+      <App />
+    );
+
+    var checkboxNode = React.findDOMNode(checkbox);
+
+    // Verify that it's Off by default
+    expect(checkboxNode.textContent).toEqual('Off');
+
+    // Simulate a click and verify that it is now On
+    TestUtils.Simulate.change(TestUtils.findRenderedDOMComponentWithTag(checkbox, 'input'));
+    expect(checkboxNode.textContent).toEqual('On');
+  });
+
+});
 
 function getFakeRowsWithHeights(numberOfRows) {
   let newFakeRows = [];
@@ -26,12 +50,12 @@ const App = React.createClass({
       <div overflow="scroll">
         <button onClick={() => {
           this.setState({
-            rowToJumpTo: self.state.newRowToJumpTo,
-            newRowToJumpTo: self.getNewRandomRow(),
-            // newRowToJumpTo: self.getNewRandomRow()
+            rowToJumpTo: this.state.newRowToJumpTo,
+            newRowToJumpTo: this.getNewRandomRow(),
+            // newRowToJumpTo: this.getNewRandomRow()
           });
         }}>
-          Jump to a random row: Row #{self.state.newRowToJumpTo.row} (its height is {self.state.fakeRows[self.state.newRowToJumpTo.row]})
+          Jump to a random row: Row #{this.state.newRowToJumpTo.row} (its height is {this.state.fakeRows[this.state.newRowToJumpTo.row]})
         </button>
         <button onClick={() => {
           this.setState({
@@ -41,11 +65,12 @@ const App = React.createClass({
           Create new rows
         </button>
         <InfiniteScroller
+          ref="infScroller"
           averageElementHeight={100} // this is a guess you make!
           containerHeight={600}
           rowToJumpTo={this.state.rowToJumpTo} // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
-          totalNumberOfRows={self.state.fakeRows.length} // an array of data for your rows
+          totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
           preloadRowStart={10} // if you want to start at a particular row to begin with
         />
       </div>
@@ -68,6 +93,3 @@ const App = React.createClass({
     );
   },
 });
-
-// tnr: instead of rendering, we should probably just mock this element..
-React.render(<App />, document.getElementById('container'));
