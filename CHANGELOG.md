@@ -1,3 +1,10 @@
+v2.0.5 - Fri, 04 Sep 2015 08:06:05 GMT
+--------------------------------------
+
+- [b39d143](../../commit/b39d143) [fixed] row start adjustments now calculated based on estimated row heights instead of average
+
+
+
 v2.0.4 - Tue, 01 Sep 2015 19:26:42 GMT
 --------------------------------------
 
