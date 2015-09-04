@@ -25,7 +25,6 @@ const InfiniteScoller = React.createClass({
   },
 
   onEditorScroll(event) {
-    console.log('scrollll');
     // tnr: we should maybe keep this implemented..
     if (this.adjustmentScroll) {
       // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
