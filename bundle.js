@@ -20551,12 +20551,15 @@
 	    onScroll: _react.PropTypes.func
 	  },
 
-	  defaultProps: {
-	    onScroll: noop,
-	    containerClassName: 'infiniteContainer'
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      onScroll: noop,
+	      containerClassName: 'infiniteContainer'
+	    };
 	  },
 
 	  onEditorScroll: function onEditorScroll(event) {
+	    console.log('scrollll');
 	    // tnr: we should maybe keep this implemented..
 	    if (this.adjustmentScroll) {
 	      // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
@@ -20566,7 +20569,7 @@
 
 	    var infiniteContainer = event.currentTarget;
 	    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
-	    var currentAverageElementHeight = visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length;
+	    // const currentAverageElementHeight = (visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length);
 	    this.oldRowStart = this.rowStart;
 	    var distanceFromTopOfVisibleRows = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
 	    var distanceFromBottomOfVisibleRows = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
@@ -20574,7 +20577,7 @@
 	    var rowsToAdd = undefined;
 	    if (distanceFromTopOfVisibleRows < 0) {
 	      if (this.rowStart > 0) {
-	        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / currentAverageElementHeight);
+	        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / this.props.averageElementHeight);
 	        newRowStart = this.rowStart - rowsToAdd;
 
 	        if (newRowStart < 0) {
@@ -20587,7 +20590,7 @@
 	      // scrolling down, so add a row below
 	      var rowsToGiveOnBottom = this.props.totalNumberOfRows - 1 - this.rowEnd;
 	      if (rowsToGiveOnBottom > 0) {
-	        rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / currentAverageElementHeight);
+	        rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / this.props.averageElementHeight);
 	        newRowStart = this.rowStart + rowsToAdd;
 
 	        if (newRowStart + this.state.visibleRows.length >= this.props.totalNumberOfRows) {
@@ -20719,13 +20722,13 @@
 	      // scroll to align the tops of the boxes
 	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
 	      // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: '+adjustInfiniteContainerByThisAmount)
-	      //   this.adjustmentScroll = true;
+	      // this.adjustmentScroll = true;
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
 	    } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
 	      // scroll to align the bottoms of the boxes
 	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
 	      //   console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
-	      //   this.adjustmentScroll = true;
+	      // this.adjustmentScroll = true;
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
 	    }
 	  },

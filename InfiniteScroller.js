@@ -25,6 +25,7 @@ const InfiniteScoller = React.createClass({
   },
 
   onEditorScroll(event) {
+    console.log('scrollll');
     // tnr: we should maybe keep this implemented..
     if (this.adjustmentScroll) {
       // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
@@ -34,7 +35,7 @@ const InfiniteScoller = React.createClass({
 
     let infiniteContainer = event.currentTarget;
     const visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
-    const currentAverageElementHeight = (visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length);
+    // const currentAverageElementHeight = (visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length);
     this.oldRowStart = this.rowStart;
     const distanceFromTopOfVisibleRows = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
     const distanceFromBottomOfVisibleRows = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
@@ -42,7 +43,7 @@ const InfiniteScoller = React.createClass({
     let rowsToAdd;
     if (distanceFromTopOfVisibleRows < 0) {
       if (this.rowStart > 0) {
-        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / currentAverageElementHeight);
+        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / this.props.averageElementHeight);
         newRowStart = this.rowStart - rowsToAdd;
 
         if (newRowStart < 0) {
@@ -55,7 +56,7 @@ const InfiniteScoller = React.createClass({
       // scrolling down, so add a row below
       const rowsToGiveOnBottom = this.props.totalNumberOfRows - 1 - this.rowEnd;
       if (rowsToGiveOnBottom > 0) {
-        rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / currentAverageElementHeight);
+        rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / this.props.averageElementHeight);
         newRowStart = this.rowStart + rowsToAdd;
 
         if (newRowStart + this.state.visibleRows.length >= this.props.totalNumberOfRows) {
@@ -187,13 +188,13 @@ const InfiniteScoller = React.createClass({
       // scroll to align the tops of the boxes
       adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
       // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: '+adjustInfiniteContainerByThisAmount)
-      //   this.adjustmentScroll = true;
+      // this.adjustmentScroll = true;
       infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
     } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
       // scroll to align the bottoms of the boxes
       adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
       //   console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
-      //   this.adjustmentScroll = true;
+      // this.adjustmentScroll = true;
       infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
     }
   },
