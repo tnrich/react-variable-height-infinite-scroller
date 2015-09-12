@@ -3,8 +3,9 @@ import InfiniteScroller from './InfiniteScroller.js';
 
 function getFakeRowsWithHeights(numberOfRows) {
   let newFakeRows = [];
-  for (let i = 0; i < numberOfRows; i++) {
-    newFakeRows.push({height: Math.floor(1000 * Math.random())});
+  for (let i = 0; i < 2000; i++) {
+    newFakeRows.push({height: Math.floor(200 * Math.random())});
+    // newFakeRows.push({height: Math.floor(51 * i)});
   }
   return newFakeRows;
 }
@@ -35,6 +36,7 @@ const App = React.createClass({
         }}>
           Jump to a random row: Row #{this.state.newRowToJumpTo.row} (its height is {this.state.fakeRows[this.state.newRowToJumpTo.row].height})
         </button>
+        {"Total Rows: " + this.state.fakeRows.length}
         <button onClick={() => {
           const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
           this.setState({
@@ -50,7 +52,7 @@ const App = React.createClass({
           rowToJumpTo={this.state.rowToJumpTo} // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
           totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
-          preloadRowStart={10} // if you want to start at a particular row to begin with
+          preloadRowStart={100} // if you want to start at a particular row to begin with
         />
       </div>
     );
@@ -58,12 +60,16 @@ const App = React.createClass({
 
   renderRow(rowNumber) {
     const heightOfRow = this.state.fakeRows[rowNumber].height;
+    // var i = 0;
+    // while (i<10000) {
+    //   i++;
+    // }
     return (
       <div
         key={rowNumber}
         style={{height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange'}}
       >
-        {heightOfRow}
+        {heightOfRow} {rowNumber}
       </div>
     );
   },

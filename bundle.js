@@ -58,7 +58,7 @@
 
 	function getFakeRowsWithHeights(numberOfRows) {
 	  var newFakeRows = [];
-	  for (var i = 0; i < numberOfRows; i++) {
+	  for (var i = 0; i < 10000; i++) {
 	    newFakeRows.push({ height: Math.floor(1000 * Math.random()) });
 	  }
 	  return newFakeRows;
@@ -133,7 +133,9 @@
 	        key: rowNumber,
 	        style: { height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange' }
 	      },
-	      heightOfRow
+	      heightOfRow,
+	      ' ',
+	      rowNumber
 	    );
 	  }
 	});
@@ -20559,7 +20561,6 @@
 	  },
 
 	  onEditorScroll: function onEditorScroll(event) {
-	    console.log('scrollll');
 	    // tnr: we should maybe keep this implemented..
 	    if (this.adjustmentScroll) {
 	      // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
@@ -20575,7 +20576,7 @@
 	    var distanceFromBottomOfVisibleRows = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
 	    var newRowStart = undefined;
 	    var rowsToAdd = undefined;
-	    if (distanceFromTopOfVisibleRows < 0) {
+	    if (distanceFromTopOfVisibleRows < 20) {
 	      if (this.rowStart > 0) {
 	        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / this.props.averageElementHeight);
 	        newRowStart = this.rowStart - rowsToAdd;
@@ -20586,7 +20587,7 @@
 
 	        this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
 	      }
-	    } else if (distanceFromBottomOfVisibleRows < 0) {
+	    } else if (distanceFromBottomOfVisibleRows < 20) {
 	      // scrolling down, so add a row below
 	      var rowsToGiveOnBottom = this.props.totalNumberOfRows - 1 - this.rowEnd;
 	      if (rowsToGiveOnBottom > 0) {
@@ -20595,6 +20596,7 @@
 
 	        if (newRowStart + this.state.visibleRows.length >= this.props.totalNumberOfRows) {
 	          // the new row start is too high, so we instead just append the max rowsToGiveOnBottom to our current preloadRowStart
+	          console.log('hippie!');
 	          newRowStart = this.rowStart + rowsToGiveOnBottom;
 	        }
 	        this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
