@@ -99,23 +99,24 @@ const InfiniteScoller = React.createClass({
 
   componentWillUpdate() {
     let visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
-    this.soonToBeRemovedRowElementHeightDifferences = 0;
+    // this.soonToBeRemovedRowElementHeightDifferences = 0;
     this.numberOfRowsAddedToTop = 0;
     if (this.updateTriggeredByScroll === true) {
       this.updateTriggeredByScroll = false;
       const rowStartDifference = this.oldRowStart - this.rowStart;
-      if (rowStartDifference < 0) {
-        // scrolling down
-        for (let i = 0; i < -rowStartDifference; i++) {
-          const soonToBeRemovedRowElement = visibleRowsContainer.children[i];
-          if (soonToBeRemovedRowElement) {
-            const height = soonToBeRemovedRowElement.getBoundingClientRect().height;
-            // console.log('height', height);
-            this.soonToBeRemovedRowElementHeightDifferences += this.getSizeOf(this.oldRowStart + i) - height;
-            // this.soonToBeRemovedRowElementHeightDifferences.push(soonToBeRemovedRowElement.getBoundingClientRect().height);
-          }
-        }
-      } else if (rowStartDifference > 0) {
+      // if (rowStartDifference < 0) {
+      //   // scrolling down
+      //   for (let i = 0; i < -rowStartDifference; i++) {
+      //     const soonToBeRemovedRowElement = visibleRowsContainer.children[i];
+      //     if (soonToBeRemovedRowElement) {
+      //       const height = soonToBeRemovedRowElement.getBoundingClientRect().height;
+      //       // console.log('height', height);
+      //       this.soonToBeRemovedRowElementHeightDifferences += this.getSizeOf(this.oldRowStart + i) - height;
+      //       // this.soonToBeRemovedRowElementHeightDifferences.push(soonToBeRemovedRowElement.getBoundingClientRect().height);
+      //     }
+      //   }
+      // } else 
+      if (rowStartDifference > 0) {
         // console.log('rowStartDifference', rowStartDifference);
         this.numberOfRowsAddedToTop = rowStartDifference;
       }
@@ -139,10 +140,10 @@ const InfiniteScoller = React.createClass({
     // make the replacements
     let infiniteContainer = React.findDOMNode(this.refs.infiniteContainer);
     let visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
-    if (this.soonToBeRemovedRowElementHeightDifferences) {
-      console.log('this.soonToBeRemovedRowElementHeightDifferences: ' + this.soonToBeRemovedRowElementHeightDifferences);
-      infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeightDifferences;
-    }
+    // if (this.soonToBeRemovedRowElementHeightDifferences) {
+    //   console.log('this.soonToBeRemovedRowElementHeightDifferences: ' + this.soonToBeRemovedRowElementHeightDifferences);
+    //   infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeightDifferences;
+    // }
     if (this.numberOfRowsAddedToTop) {
       // we're adding rows to the top, so we're going from 100's to random heights, so we'll calculate the differenece
       // and adjust the infiniteContainer.scrollTop by it

@@ -58,8 +58,9 @@
 
 	function getFakeRowsWithHeights(numberOfRows) {
 	  var newFakeRows = [];
-	  for (var i = 0; i < 10000; i++) {
-	    newFakeRows.push({ height: Math.floor(1000 * Math.random()) });
+	  for (var i = 0; i < 2000; i++) {
+	    newFakeRows.push({ height: Math.floor(200 * Math.random()) });
+	    // newFakeRows.push({height: Math.floor(51 * i)});
 	  }
 	  return newFakeRows;
 	}
@@ -101,6 +102,7 @@
 	        this.state.fakeRows[this.state.newRowToJumpTo.row].height,
 	        ')'
 	      ),
+	      "Total Rows: " + this.state.fakeRows.length,
 	      _react2['default'].createElement(
 	        'button',
 	        { onClick: function () {
@@ -120,13 +122,17 @@
 	        rowToJumpTo: this.state.rowToJumpTo, // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
 	        renderRow: this.renderRow, // function to render a row
 	        totalNumberOfRows: this.state.fakeRows.length, // an array of data for your rows
-	        preloadRowStart: 10 // if you want to start at a particular row to begin with
+	        preloadRowStart: 100 // if you want to start at a particular row to begin with
 	      })
 	    );
 	  },
 
 	  renderRow: function renderRow(rowNumber) {
 	    var heightOfRow = this.state.fakeRows[rowNumber].height;
+	    // var i = 0;
+	    // while (i<10000) {
+	    //   i++;
+	    // }
 	    return _react2['default'].createElement(
 	      'div',
 	      {
@@ -340,7 +346,9 @@
 	        currentQueue = queue;
 	        queue = [];
 	        while (++queueIndex < len) {
-	            currentQueue[queueIndex].run();
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
 	        }
 	        queueIndex = -1;
 	        len = queue.length;
@@ -392,7 +400,6 @@
 	    throw new Error('process.binding is not supported');
 	};
 
-	// TODO(shtylman)
 	process.cwd = function () { return '/' };
 	process.chdir = function (dir) {
 	    throw new Error('process.chdir is not supported');
@@ -20562,11 +20569,11 @@
 
 	  onEditorScroll: function onEditorScroll(event) {
 	    // tnr: we should maybe keep this implemented..
-	    if (this.adjustmentScroll) {
-	      // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
-	      this.adjustmentScroll = false;
-	      return;
-	    }
+	    // if (this.adjustmentScroll) {
+	    //   // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
+	    //   this.adjustmentScroll = false;
+	    //   return;
+	    // }
 
 	    var infiniteContainer = event.currentTarget;
 	    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
@@ -20576,7 +20583,7 @@
 	    var distanceFromBottomOfVisibleRows = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
 	    var newRowStart = undefined;
 	    var rowsToAdd = undefined;
-	    if (distanceFromTopOfVisibleRows < 20) {
+	    if (distanceFromTopOfVisibleRows < 0) {
 	      if (this.rowStart > 0) {
 	        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / this.props.averageElementHeight);
 	        newRowStart = this.rowStart - rowsToAdd;
@@ -20587,17 +20594,20 @@
 
 	        this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
 	      }
-	    } else if (distanceFromBottomOfVisibleRows < 20) {
+	    } else if (distanceFromBottomOfVisibleRows < 0) {
 	      // scrolling down, so add a row below
 	      var rowsToGiveOnBottom = this.props.totalNumberOfRows - 1 - this.rowEnd;
 	      if (rowsToGiveOnBottom > 0) {
+	        console.log('add row below!');
 	        rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / this.props.averageElementHeight);
 	        newRowStart = this.rowStart + rowsToAdd;
 
 	        if (newRowStart + this.state.visibleRows.length >= this.props.totalNumberOfRows) {
 	          // the new row start is too high, so we instead just append the max rowsToGiveOnBottom to our current preloadRowStart
-	          console.log('hippie!');
 	          newRowStart = this.rowStart + rowsToGiveOnBottom;
+	        }
+	        if (newRowStart < 0) {
+	          newRowStart = 0;
 	        }
 	        this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
 	      }
@@ -20632,7 +20642,7 @@
 
 	  componentWillUpdate: function componentWillUpdate() {
 	    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
-	    this.soonToBeRemovedRowElementHeights = 0;
+	    this.soonToBeRemovedRowElementHeightDifferences = 0;
 	    this.numberOfRowsAddedToTop = 0;
 	    if (this.updateTriggeredByScroll === true) {
 	      this.updateTriggeredByScroll = false;
@@ -20644,8 +20654,8 @@
 	          if (soonToBeRemovedRowElement) {
 	            var height = soonToBeRemovedRowElement.getBoundingClientRect().height;
 	            // console.log('height', height);
-	            this.soonToBeRemovedRowElementHeights += this.props.averageElementHeight - height;
-	            // this.soonToBeRemovedRowElementHeights.push(soonToBeRemovedRowElement.getBoundingClientRect().height);
+	            this.soonToBeRemovedRowElementHeightDifferences += this.getSizeOf(this.oldRowStart + i) - height;
+	            // this.soonToBeRemovedRowElementHeightDifferences.push(soonToBeRemovedRowElement.getBoundingClientRect().height);
 	          }
 	        }
 	      } else if (rowStartDifference > 0) {
@@ -20655,14 +20665,28 @@
 	    }
 	  },
 
+	  cacheSizes: function cacheSizes() {
+	    var cache = this.cache;
+	    var rowStart = this.rowStart;
+
+	    var itemEls = _react2['default'].findDOMNode(this.refs.visibleRowsContainer).children;
+	    for (var i = 0, l = itemEls.length; i < l; ++i) {
+	      cache[rowStart + i] = itemEls[i].getBoundingClientRect().height;
+	    }
+	    this.averageComputedElHeight = Object.keys(cache).reduce(function (previousVal, key) {
+	      return previousVal + cache[key];
+	    }, 0);
+	  },
+
 	  componentDidUpdate: function componentDidUpdate() {
 	    // strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
 	    // thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we
 	    // make the replacements
 	    var infiniteContainer = _react2['default'].findDOMNode(this.refs.infiniteContainer);
 	    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
-	    if (this.soonToBeRemovedRowElementHeights) {
-	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeights;
+	    if (this.soonToBeRemovedRowElementHeightDifferences) {
+	      console.log('this.soonToBeRemovedRowElementHeightDifferences: ' + this.soonToBeRemovedRowElementHeightDifferences);
+	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeightDifferences;
 	    }
 	    if (this.numberOfRowsAddedToTop) {
 	      // we're adding rows to the top, so we're going from 100's to random heights, so we'll calculate the differenece
@@ -20672,10 +20696,17 @@
 	      for (var i = 0; i < this.numberOfRowsAddedToTop; i++) {
 	        var justAddedElement = visibleRowsContainer.children[i];
 	        if (justAddedElement) {
-	          adjustmentScroll += this.props.averageElementHeight - justAddedElement.getBoundingClientRect().height;
+	          // only add height if necessary here
+	          var index = this.oldRowStart - i - 1;
+	          if (!this.cache[index]) {
+	            adjustmentScroll += this.props.averageElementHeight - justAddedElement.getBoundingClientRect().height;
+	          }
 	        }
 	      }
-	      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustmentScroll;
+	      if (adjustmentScroll) {
+	        console.log('adjustmentScroll: ' + adjustmentScroll);
+	        infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustmentScroll;
+	      }
 	    }
 
 	    if (!visibleRowsContainer.childNodes[0]) {
@@ -20703,6 +20734,7 @@
 	        // but it probably needs to be adjusted to be centered/at the top of the users viewport
 	        adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
 	        infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
+	        console.log('row jump triggered');
 	      }
 	    }
 	    // check if the visible rows fill up the viewport
@@ -20722,22 +20754,26 @@
 	      }
 	    } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
 	      // scroll to align the tops of the boxes
+	      console.log('top > top');
 	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
 	      // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: '+adjustInfiniteContainerByThisAmount)
 	      // this.adjustmentScroll = true;
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
 	    } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
 	      // scroll to align the bottoms of the boxes
+	      console.log('bottom < bottom');
 	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
 	      //   console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
 	      // this.adjustmentScroll = true;
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
 	    }
+	    this.cacheSizes();
 	  },
 
 	  componentWillMount: function componentWillMount() {
 	    // this is the only place where we use preloadRowStart
 	    var newRowStart = 0;
+	    this.cache = {};
 	    if (this.props.preloadRowStart < this.props.totalNumberOfRows) {
 	      newRowStart = this.props.preloadRowStart;
 	    }
@@ -20772,14 +20808,24 @@
 	      newVisibleRows.push(i);
 	    }
 	    // var newVisibleRows = this.rowStart, this.rowEnd + 1);
-	    this.setState({
-	      visibleRows: newVisibleRows
-	    });
+	    if (!this.state || (this.state.visibleRows[0] !== newVisibleRows[0] || this.state.visibleRows[this.state.visibleRows.length - 1] !== newVisibleRows[newVisibleRows.length - 1])) {
+	      this.setState({
+	        visibleRows: newVisibleRows
+	      });
+	    }
 	  },
 
 	  // public method
 	  getVisibleRowsContainerDomNode: function getVisibleRowsContainerDomNode() {
 	    return _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
+	  },
+
+	  getSizeOf: function getSizeOf(index) {
+	    // Try the cache.
+	    var cache = this.cache;
+
+	    if (cache[index]) return cache[index];
+	    if (this.props.averageElementHeight) return this.props.averageElementHeight;
 	  },
 
 	  render: function render() {
@@ -20790,8 +20836,51 @@
 	    });
 
 	    var rowHeight = this.currentAverageElementHeight ? this.currentAverageElementHeight : this.props.averageElementHeight;
-	    this.topSpacerHeight = this.rowStart * rowHeight;
-	    this.bottomSpacerHeight = (this.props.totalNumberOfRows - 1 - this.rowEnd) * rowHeight;
+	    // let space = 0;
+	    var from = 0;
+	    // let size = 0;
+	    this.topSpacerHeight = 0;
+	    // this.bottomSpacerHeight = 0;
+	    // const maxFrom = this.props.totalNumberOfRows - 1;
+
+	    while (from < this.rowStart) {
+	      var itemSize = this.getSizeOf(from);
+	      // if (isNaN(itemSize) || space + itemSize > start) break;
+	      this.topSpacerHeight += itemSize;
+	      ++from;
+	    }
+	    console.log('this.topSpacerHeight: ' + this.topSpacerHeight);
+	    // while (from < this.rowStart) {
+	    //   const itemSize = this.getSizeOf(from);
+	    //   if (isNaN(itemSize) || space + itemSize > start) break;
+	    //   this.topSpacerHeight += itemSize;
+	    //   ++from;
+	    // }
+
+	    // const maxSize = length - from;
+
+	    // while (size < maxSize && space < end) {
+	    //   const itemSize = this.getSizeOf(from + size);
+	    //   if (isNaN(itemSize)) {
+	    //     size = Math.min(size + pageSize, maxSize);
+	    //     break;
+	    //   }
+	    //   space += itemSize;
+	    //   ++size;
+	    // }
+	    // this.topSpacerHeight = this.rowStart * rowHeight;
+	    from = this.rowEnd;
+	    // let size = 0;
+	    this.bottomSpacerHeight = 0;
+	    // const maxFrom = this.props.totalNumberOfRows - 1;
+
+	    while (from < this.props.totalNumberOfRows - 1) {
+	      var itemSize = this.getSizeOf(from);
+	      // if (isNaN(itemSize) || space + itemSize > start) break;
+	      this.bottomSpacerHeight += itemSize;
+	      ++from;
+	    }
+	    // this.bottomSpacerHeight = (this.props.totalNumberOfRows - 1 - this.rowEnd) * rowHeight;
 
 	    var infiniteContainerStyle = {
 	      height: this.props.containerHeight,

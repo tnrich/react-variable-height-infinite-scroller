@@ -47,7 +47,7 @@ const App = React.createClass({
           Create {newNumberOfRowsToDisplay} new rows
         </button>
         <InfiniteScroller
-          averageElementHeight={100} // this is a guess you make!
+          averageElementHeight={400} // this is a guess you make!
           containerHeight={600}
           rowToJumpTo={this.state.rowToJumpTo} // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
@@ -66,8 +66,7 @@ const App = React.createClass({
     // }
     return (
       <div
-        key={rowNumber}
-        style={{height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange'}}
+        style={{height: heightOfRow, background: rowNumber % 2 === 0 ? 'red' : 'orange'}}
       >
         {heightOfRow} {rowNumber}
       </div>

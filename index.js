@@ -53,9 +53,9 @@ var InfiniteScoller = _react2['default'].createClass({
     var distanceFromBottomOfVisibleRows = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
     var newRowStart = undefined;
     var rowsToAdd = undefined;
-    if (distanceFromTopOfVisibleRows < this.props.containerHeight / 6) {
+    if (distanceFromTopOfVisibleRows < 0) {
       if (this.rowStart > 0) {
-        rowsToAdd = Math.ceil(-1 * distanceFromTopOfVisibleRows / this.props.averageElementHeight);
+        rowsToAdd = 3 + Math.ceil(-1 * distanceFromTopOfVisibleRows / this.props.averageElementHeight);
         newRowStart = this.rowStart - rowsToAdd;
 
         if (newRowStart < 0) {
@@ -64,12 +64,12 @@ var InfiniteScoller = _react2['default'].createClass({
 
         this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
       }
-    } else if (distanceFromBottomOfVisibleRows < this.props.containerHeight / 6) {
+    } else if (distanceFromBottomOfVisibleRows < 0) {
       // scrolling down, so add a row below
       var rowsToGiveOnBottom = this.props.totalNumberOfRows - 1 - this.rowEnd;
       if (rowsToGiveOnBottom > 0) {
         console.log('add row below!');
-        rowsToAdd = Math.ceil(-1 * distanceFromBottomOfVisibleRows / this.props.averageElementHeight);
+        rowsToAdd = 3 + Math.ceil(-1 * distanceFromBottomOfVisibleRows / this.props.averageElementHeight);
         newRowStart = this.rowStart + rowsToAdd;
 
         if (newRowStart + this.state.visibleRows.length >= this.props.totalNumberOfRows) {
@@ -112,26 +112,27 @@ var InfiniteScoller = _react2['default'].createClass({
 
   componentWillUpdate: function componentWillUpdate() {
     var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
-    this.soonToBeRemovedRowElementHeightDifferences = 0;
+    // this.soonToBeRemovedRowElementHeightDifferences = 0;
     this.numberOfRowsAddedToTop = 0;
     if (this.updateTriggeredByScroll === true) {
       this.updateTriggeredByScroll = false;
       var rowStartDifference = this.oldRowStart - this.rowStart;
-      if (rowStartDifference < 0) {
-        // scrolling down
-        for (var i = 0; i < -rowStartDifference; i++) {
-          var soonToBeRemovedRowElement = visibleRowsContainer.children[i];
-          if (soonToBeRemovedRowElement) {
-            var height = soonToBeRemovedRowElement.getBoundingClientRect().height;
-            // console.log('height', height);
-            this.soonToBeRemovedRowElementHeightDifferences += this.getSizeOf(this.oldRowStart + i) - height;
-            // this.soonToBeRemovedRowElementHeightDifferences.push(soonToBeRemovedRowElement.getBoundingClientRect().height);
-          }
-        }
-      } else if (rowStartDifference > 0) {
-          // console.log('rowStartDifference', rowStartDifference);
-          this.numberOfRowsAddedToTop = rowStartDifference;
-        }
+      // if (rowStartDifference < 0) {
+      //   // scrolling down
+      //   for (let i = 0; i < -rowStartDifference; i++) {
+      //     const soonToBeRemovedRowElement = visibleRowsContainer.children[i];
+      //     if (soonToBeRemovedRowElement) {
+      //       const height = soonToBeRemovedRowElement.getBoundingClientRect().height;
+      //       // console.log('height', height);
+      //       this.soonToBeRemovedRowElementHeightDifferences += this.getSizeOf(this.oldRowStart + i) - height;
+      //       // this.soonToBeRemovedRowElementHeightDifferences.push(soonToBeRemovedRowElement.getBoundingClientRect().height);
+      //     }
+      //   }
+      // } else
+      if (rowStartDifference > 0) {
+        // console.log('rowStartDifference', rowStartDifference);
+        this.numberOfRowsAddedToTop = rowStartDifference;
+      }
     }
   },
 
@@ -154,10 +155,10 @@ var InfiniteScoller = _react2['default'].createClass({
     // make the replacements
     var infiniteContainer = _react2['default'].findDOMNode(this.refs.infiniteContainer);
     var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
-    if (this.soonToBeRemovedRowElementHeightDifferences) {
-      console.log('this.soonToBeRemovedRowElementHeightDifferences: ' + this.soonToBeRemovedRowElementHeightDifferences);
-      infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeightDifferences;
-    }
+    // if (this.soonToBeRemovedRowElementHeightDifferences) {
+    //   console.log('this.soonToBeRemovedRowElementHeightDifferences: ' + this.soonToBeRemovedRowElementHeightDifferences);
+    //   infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeightDifferences;
+    // }
     if (this.numberOfRowsAddedToTop) {
       // we're adding rows to the top, so we're going from 100's to random heights, so we'll calculate the differenece
       // and adjust the infiniteContainer.scrollTop by it
