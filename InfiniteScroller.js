@@ -88,7 +88,7 @@ const InfiniteScoller = React.createClass({
       const rowStart = this.rowStart;
       // we need to set the new totalNumber of rows prop here before calling prepare visible rows
       // so that prepare visible rows knows how many rows it has to work with
-      this.props.totalNumberOfRows = nextProps.totalNisiblenumberOfRows;
+      this.props.totalNumberOfRows = nextProps.totalNumberOfRows;
       this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
     }
   },
