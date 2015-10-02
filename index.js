@@ -101,8 +101,7 @@ var InfiniteScoller = _react2['default'].createClass({
       var rowStart = this.rowStart;
       // we need to set the new totalNumber of rows prop here before calling prepare visible rows
       // so that prepare visible rows knows how many rows it has to work with
-      this.props.totalNumberOfRows = nextProps.totalNumberOfRows;
-      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
+      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay, nextProps.totalNumberOfRows);
     }
   },
 
@@ -227,11 +226,12 @@ var InfiniteScoller = _react2['default'].createClass({
     this.componentDidUpdate();
   },
 
-  prepareVisibleRows: function prepareVisibleRows(rowStart, newNumberOfRowsToDisplay) {
+  prepareVisibleRows: function prepareVisibleRows(rowStart, newNumberOfRowsToDisplay, newTotalNumberOfRows) {
     // note, rowEnd is optional
     this.numberOfRowsToDisplay = newNumberOfRowsToDisplay;
-    if (rowStart + newNumberOfRowsToDisplay > this.props.totalNumberOfRows) {
-      this.rowEnd = this.props.totalNumberOfRows - 1;
+    var totalNumberOfRows = _validateIoNonnegativeIntegerArray2['default']([newTotalNumberOfRows]) ? newTotalNumberOfRows : this.props.totalNumberOfRows;
+    if (rowStart + newNumberOfRowsToDisplay > totalNumberOfRows) {
+      this.rowEnd = totalNumberOfRows - 1;
     } else {
       this.rowEnd = rowStart + newNumberOfRowsToDisplay - 1;
     }

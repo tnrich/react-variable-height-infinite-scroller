@@ -8,7 +8,7 @@
     "start": "npm run watch & webpack && webpack-dev-server --port 8081 --devtool eval --progress --colors --content-base",
     "build": "babel InfiniteScroller.js -o index.js",
     "watch": "babel --watch InfiniteScroller.js -o index.js",
-    "lint": "eslint ./",
+    "lint": "eslint ./*.js",
     "patch": "release patch",
     "minor": "release minor",
     "major": "release major"
