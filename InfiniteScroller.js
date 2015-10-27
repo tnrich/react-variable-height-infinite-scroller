@@ -74,13 +74,8 @@ const InfiniteScoller = React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    // if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
-    //   this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
-    //   this.rowJumpTriggered = true;
-    //   this.rowJumpedTo = nextProps.rowToJumpTo;
-    // }
     const newNumberOfRowsToDisplay = this.state.visibleRows.length;
-    if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
+    if (nextProps.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
       this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
       this.rowJumpTriggered = true;
       this.rowJumpedTo = nextProps.rowToJumpTo.row;
@@ -156,17 +151,6 @@ const InfiniteScoller = React.createClass({
     }
 
     let adjustInfiniteContainerByThisAmount;
-
-    // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
-    if (this.rowJumpTriggered) {
-      this.rowJumpTriggered = false;
-      if (this.rowJumpedTo === this.state.visibleRows[0]) {
-        // we've successfully jumped to that row as the top row!
-        // but it probably needs to be adjusted to be centered/at the top of the users viewport
-        adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
-        infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
-      }
-    }
     // check if the visible rows fill up the viewport
     // tnrtodo: maybe put logic in here to reshrink the number of rows to display... maybe...
     if (visibleRowsContainer.getBoundingClientRect().height / 2 <= this.props.containerHeight) {
@@ -182,6 +166,11 @@ const InfiniteScoller = React.createClass({
           this.prepareVisibleRows(0, this.state.visibleRows.length + 1);
         }
       }
+    } else if (this.rowJumpTriggered) {
+      this.rowJumpTriggered = false;
+      // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
+      adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.children[(this.state.visibleRows.indexOf(this.rowJumpedTo))].getBoundingClientRect().top;
+      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
     } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
       // scroll to align the tops of the boxes
       adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
@@ -191,17 +180,18 @@ const InfiniteScoller = React.createClass({
     } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
       // scroll to align the bottoms of the boxes
       adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
-      //   console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
+        // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
       // this.adjustmentScroll = true;
       infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
     }
   },
 
   componentWillMount() {
-    // this is the only place where we use preloadRowStart
     let newRowStart = 0;
-    if (this.props.preloadRowStart < this.props.totalNumberOfRows) {
-      newRowStart = this.props.preloadRowStart;
+    if (this.props.rowToJumpTo && this.props.rowToJumpTo.row && (this.props.rowToJumpTo.row < this.props.totalNumberOfRows)) {
+      newRowStart = this.props.rowToJumpTo.row;
+      this.rowJumpTriggered = true;
+      this.rowJumpedTo = this.props.rowToJumpTo.row;
     }
     this.prepareVisibleRows(newRowStart, 4);
   },
@@ -209,7 +199,7 @@ const InfiniteScoller = React.createClass({
   componentDidMount() {
     // call componentDidUpdate so that the scroll position will be adjusted properly
     // (we may load a random row in the middle of the sequence and not have the infinte container scrolled properly
-    // initially, so we scroll to the show the rowContainer)
+    // initially, so we scroll to show the rowContainer)
     this.componentDidUpdate();
   },
 

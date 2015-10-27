@@ -64,8 +64,8 @@
 	  return newFakeRows;
 	}
 
-	var App = _react2['default'].createClass({
-	  displayName: 'App',
+	var Example1 = _react2['default'].createClass({
+	  displayName: 'Example1',
 
 	  getNewRandomRow: function getNewRandomRow(totalRows) {
 	    return { row: Math.floor(totalRows * Math.random()) };
@@ -87,6 +87,11 @@
 	    return _react2['default'].createElement(
 	      'div',
 	      { overflow: 'scroll' },
+	      _react2['default'].createElement(
+	        'h3',
+	        null,
+	        'Example 1: Random number of rows and row heights'
+	      ),
 	      _react2['default'].createElement(
 	        'button',
 	        { onClick: function () {
@@ -138,7 +143,101 @@
 	  }
 	});
 
-	_react2['default'].render(_react2['default'].createElement(App, null), document.getElementById('container'));
+	function get10FakeRowsWithHeights(numberOfRows) {
+	  var newFakeRows = [];
+	  for (var i = 0; i < numberOfRows; i++) {
+	    newFakeRows.push({ height: Math.floor(1000 * Math.random()) });
+	  }
+	  return newFakeRows;
+	}
+
+	var Example2 = _react2['default'].createClass({
+	  displayName: 'Example2',
+
+	  getNewRandomRow: function getNewRandomRow() {
+	    return { row: 9 };
+	  },
+
+	  getInitialState: function getInitialState() {
+	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    var newNumberOfRowsToDisplay = 10;
+	    var newFakeRows = get10FakeRowsWithHeights(newNumberOfRowsToDisplay);
+	    return {
+	      rowToJumpTo: { row: 9 },
+	      newRowToJumpTo: 9,
+	      fakeRows: newFakeRows
+	    };
+	  },
+	  render: function render() {
+	    var _this2 = this;
+
+	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    var newNumberOfRowsToDisplay = 10;
+	    return _react2['default'].createElement(
+	      'div',
+	      { overflow: 'scroll' },
+	      _react2['default'].createElement(
+	        'h3',
+	        null,
+	        'Example 1: Random number of rows and row heights'
+	      ),
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            _this2.setState({
+	              rowToJumpTo: _this2.state.newRowToJumpTo,
+	              newRowToJumpTo: _this2.getNewRandomRow(_this2.state.fakeRows.length)
+	            });
+	          } },
+	        'Jump to a random row: Row #',
+	        this.state.newRowToJumpTo.row,
+	        ' (its height is ',
+	        this.state.fakeRows[this.state.newRowToJumpTo.row].height,
+	        ')'
+	      ),
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            var newFakeRows = get10FakeRowsWithHeights(newNumberOfRowsToDisplay);
+	            _this2.setState({
+	              fakeRows: newFakeRows,
+	              newRowToJumpTo: 9
+	            });
+	          } },
+	        'Create ',
+	        newNumberOfRowsToDisplay,
+	        ' new rows'
+	      ),
+	      _react2['default'].createElement(_InfiniteScrollerJs2['default'], {
+	        averageElementHeight: 100, // this is a guess you make!
+	        containerHeight: 600,
+	        rowToJumpTo: this.state.rowToJumpTo, // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
+	        renderRow: this.renderRow, // function to render a row
+	        totalNumberOfRows: this.state.fakeRows.length, // an array of data for your rows
+	        preloadRowStart: 10 // if you want to start at a particular row to begin with
+	      })
+	    );
+	  },
+
+	  renderRow: function renderRow(rowNumber) {
+	    var heightOfRow = this.state.fakeRows[rowNumber].height;
+	    return _react2['default'].createElement(
+	      'div',
+	      {
+	        key: rowNumber,
+	        style: { height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange' }
+	      },
+	      heightOfRow
+	    );
+	  }
+	});
+
+	_react2['default'].render(_react2['default'].createElement(
+	  'div',
+	  null,
+	  _react2['default'].createElement(Example1, null),
+	  _react2['default'].createElement(Example2, null)
+	), document.getElementById('container'));
 
 /***/ },
 /* 1 */
@@ -338,7 +437,9 @@
 	        currentQueue = queue;
 	        queue = [];
 	        while (++queueIndex < len) {
-	            currentQueue[queueIndex].run();
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
 	        }
 	        queueIndex = -1;
 	        len = queue.length;
@@ -390,7 +491,6 @@
 	    throw new Error('process.binding is not supported');
 	};
 
-	// TODO(shtylman)
 	process.cwd = function () { return '/' };
 	process.chdir = function (dir) {
 	    throw new Error('process.chdir is not supported');
@@ -20559,7 +20659,6 @@
 	  },
 
 	  onEditorScroll: function onEditorScroll(event) {
-	    console.log('scrollll');
 	    // tnr: we should maybe keep this implemented..
 	    if (this.adjustmentScroll) {
 	      // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
@@ -20609,13 +20708,8 @@
 	  },
 
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    // if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
-	    //   this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
-	    //   this.rowJumpTriggered = true;
-	    //   this.rowJumpedTo = nextProps.rowToJumpTo;
-	    // }
 	    var newNumberOfRowsToDisplay = this.state.visibleRows.length;
-	    if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
+	    if (nextProps.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
 	      this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
 	      this.rowJumpTriggered = true;
 	      this.rowJumpedTo = nextProps.rowToJumpTo.row;
@@ -20623,8 +20717,7 @@
 	      var rowStart = this.rowStart;
 	      // we need to set the new totalNumber of rows prop here before calling prepare visible rows
 	      // so that prepare visible rows knows how many rows it has to work with
-	      this.props.totalNumberOfRows = nextProps.totalNisiblenumberOfRows;
-	      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
+	      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay, nextProps.totalNumberOfRows);
 	    }
 	  },
 
@@ -20692,17 +20785,6 @@
 	    }
 
 	    var adjustInfiniteContainerByThisAmount = undefined;
-
-	    // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
-	    if (this.rowJumpTriggered) {
-	      this.rowJumpTriggered = false;
-	      if (this.rowJumpedTo === this.state.visibleRows[0]) {
-	        // we've successfully jumped to that row as the top row!
-	        // but it probably needs to be adjusted to be centered/at the top of the users viewport
-	        adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
-	        infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
-	      }
-	    }
 	    // check if the visible rows fill up the viewport
 	    // tnrtodo: maybe put logic in here to reshrink the number of rows to display... maybe...
 	    if (visibleRowsContainer.getBoundingClientRect().height / 2 <= this.props.containerHeight) {
@@ -20718,26 +20800,41 @@
 	            this.prepareVisibleRows(0, this.state.visibleRows.length + 1);
 	          }
 	      }
+	    } else if (this.rowJumpTriggered) {
+	      // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
+	      this.rowJumpTriggered = false;
+	      adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.children[this.state.visibleRows.indexOf(this.rowJumpedTo)].getBoundingClientRect().top;
+	      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
+
+	      // if (this.rowJumpedTo === this.state.visibleRows[0]) {
+	      //   // we've successfully jumped to that row as the top row!
+	      //   // but it probably needs to be adjusted to be centered/at the top of the users viewport
+	      //   adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
+	      //   infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
+	      //   // this.adjustmentScroll = true;
+	      // }
 	    } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
-	      // scroll to align the tops of the boxes
-	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
-	      // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: '+adjustInfiniteContainerByThisAmount)
-	      // this.adjustmentScroll = true;
-	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
-	    } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
-	      // scroll to align the bottoms of the boxes
-	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
-	      //   console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
-	      // this.adjustmentScroll = true;
-	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
-	    }
+	        // scroll to align the tops of the boxes
+	        adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
+	        console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: ' + adjustInfiniteContainerByThisAmount);
+	        // this.adjustmentScroll = true;
+	        infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
+	      } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
+	        // scroll to align the bottoms of the boxes
+	        adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
+	        console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: ' + adjustInfiniteContainerByThisAmount);
+	        // this.adjustmentScroll = true;
+	        infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
+	      }
 	  },
 
 	  componentWillMount: function componentWillMount() {
 	    // this is the only place where we use preloadRowStart
 	    var newRowStart = 0;
-	    if (this.props.preloadRowStart < this.props.totalNumberOfRows) {
-	      newRowStart = this.props.preloadRowStart;
+	    if (this.props.rowToJumpTo && this.props.rowToJumpTo.row && this.props.rowToJumpTo.row < this.props.totalNumberOfRows) {
+	      newRowStart = this.props.rowToJumpTo.row;
+	      this.rowJumpTriggered = true;
+	      this.rowJumpedTo = this.props.rowToJumpTo.row;
 	    }
 	    this.prepareVisibleRows(newRowStart, 4);
 	  },
@@ -20749,11 +20846,12 @@
 	    this.componentDidUpdate();
 	  },
 
-	  prepareVisibleRows: function prepareVisibleRows(rowStart, newNumberOfRowsToDisplay) {
+	  prepareVisibleRows: function prepareVisibleRows(rowStart, newNumberOfRowsToDisplay, newTotalNumberOfRows) {
 	    // note, rowEnd is optional
 	    this.numberOfRowsToDisplay = newNumberOfRowsToDisplay;
-	    if (rowStart + newNumberOfRowsToDisplay > this.props.totalNumberOfRows) {
-	      this.rowEnd = this.props.totalNumberOfRows - 1;
+	    var totalNumberOfRows = _validateIoNonnegativeIntegerArray2['default']([newTotalNumberOfRows]) ? newTotalNumberOfRows : this.props.totalNumberOfRows;
+	    if (rowStart + newNumberOfRowsToDisplay > totalNumberOfRows) {
+	      this.rowEnd = totalNumberOfRows - 1;
 	    } else {
 	      this.rowEnd = rowStart + newNumberOfRowsToDisplay - 1;
 	    }
