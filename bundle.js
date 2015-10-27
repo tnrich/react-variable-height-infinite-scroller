@@ -20566,7 +20566,6 @@
 	  propTypes: {
 	    averageElementHeight: _react.PropTypes.number.isRequired,
 	    containerHeight: _react.PropTypes.number.isRequired,
-	    preloadRowStart: _react.PropTypes.number.isRequired,
 	    totalNumberOfRows: _react.PropTypes.number.isRequired,
 	    renderRow: _react.PropTypes.func.isRequired,
 	    rowToJumpTo: _react.PropTypes.shape({
@@ -21150,7 +21149,7 @@
 	      _react2['default'].createElement(
 	        'h3',
 	        null,
-	        'Example 2: 10 rows of random height with bottom row the "jumpToRow"'
+	        'Example 2: Ten rows of random height with last row the "rowToJumpTo"'
 	      ),
 	      _react2['default'].createElement(
 	        'button',
@@ -21259,7 +21258,7 @@
 	      _react2['default'].createElement(
 	        'h3',
 	        null,
-	        'Example 2: 10 rows of random height with bottom row the "jumpToRow"'
+	        'Example 3: Ten rows of random height with last row the "rowToJumpTo" and jumpToBottomOfRow=true.'
 	      ),
 	      _react2['default'].createElement(
 	        'button',
@@ -21290,11 +21289,11 @@
 	      ),
 	      _react2['default'].createElement(_InfiniteScrollerJs2['default'], {
 	        averageElementHeight: 100, // this is a guess you make!
-	        containerHeight: 600,
+	        containerHeight: 600, // how tall you want the container to be
 	        rowToJumpTo: this.state.rowToJumpTo, // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
 	        renderRow: this.renderRow, // function to render a row
 	        totalNumberOfRows: this.state.fakeRows.length, // an array of data for your rows
-	        jumpToBottomOfRow: true
+	        jumpToBottomOfRow: true // (optional) by default jumping to a row jumps to the top, set to true if you want to jump to the bottom of the row
 	      })
 	    );
 	  },

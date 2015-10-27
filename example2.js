@@ -25,7 +25,7 @@ const Example2 = React.createClass({
     return (
       <div style={{width: 300}} overflow="scroll">
         <h3>
-          Example 2: 10 rows of random height with last row the "rowToJumpTo"
+          Example 2: Ten rows of random height with last row the "rowToJumpTo"
         </h3>
         <button onClick={() => {
           this.setState({
