@@ -1,3 +1,11 @@
+v3.0.0 - Tue, 27 Oct 2015 04:36:33 GMT
+--------------------------------------
+
+- [dbb41ec](../../commit/dbb41ec) [fixed] linting errors
+- [7b35e5d](../../commit/7b35e5d) [fixed] scroll jump to bottom row
+
+
+
 v2.0.9 - Fri, 02 Oct 2015 18:21:59 GMT
 --------------------------------------
 
