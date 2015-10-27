@@ -55,7 +55,6 @@ const Example1 = React.createClass({
           rowToJumpTo={this.state.rowToJumpTo} // (optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
           totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
-          preloadRowStart={10}
         />
       </div>
     );
