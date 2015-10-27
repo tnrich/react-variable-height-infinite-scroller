@@ -38,7 +38,6 @@ var InfiniteScoller = _react2['default'].createClass({
   },
 
   onEditorScroll: function onEditorScroll(event) {
-    console.log('scrollll');
     // tnr: we should maybe keep this implemented..
     if (this.adjustmentScroll) {
       // adjustment scrolls are called in componentDidUpdate where we manually set the scrollTop (which inadvertantly triggers a scroll)
@@ -88,13 +87,8 @@ var InfiniteScoller = _react2['default'].createClass({
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    // if (this.props.rowJumpTrigger !== nextProps.rowJumpTrigger) {
-    //   this.prepareVisibleRows(nextProps.rowToJumpTo, newNumberOfRowsToDisplay);
-    //   this.rowJumpTriggered = true;
-    //   this.rowJumpedTo = nextProps.rowToJumpTo;
-    // }
     var newNumberOfRowsToDisplay = this.state.visibleRows.length;
-    if (this.props.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
+    if (nextProps.rowToJumpTo && this.props.rowToJumpTo !== nextProps.rowToJumpTo) {
       this.prepareVisibleRows(nextProps.rowToJumpTo.row, newNumberOfRowsToDisplay);
       this.rowJumpTriggered = true;
       this.rowJumpedTo = nextProps.rowToJumpTo.row;
@@ -102,8 +96,7 @@ var InfiniteScoller = _react2['default'].createClass({
       var rowStart = this.rowStart;
       // we need to set the new totalNumber of rows prop here before calling prepare visible rows
       // so that prepare visible rows knows how many rows it has to work with
-      this.props.totalNumberOfRows = nextProps.totalNisiblenumberOfRows;
-      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay);
+      this.prepareVisibleRows(rowStart, newNumberOfRowsToDisplay, nextProps.totalNumberOfRows);
     }
   },
 
@@ -171,17 +164,6 @@ var InfiniteScoller = _react2['default'].createClass({
     }
 
     var adjustInfiniteContainerByThisAmount = undefined;
-
-    // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
-    if (this.rowJumpTriggered) {
-      this.rowJumpTriggered = false;
-      if (this.rowJumpedTo === this.state.visibleRows[0]) {
-        // we've successfully jumped to that row as the top row!
-        // but it probably needs to be adjusted to be centered/at the top of the users viewport
-        adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
-        infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
-      }
-    }
     // check if the visible rows fill up the viewport
     // tnrtodo: maybe put logic in here to reshrink the number of rows to display... maybe...
     if (visibleRowsContainer.getBoundingClientRect().height / 2 <= this.props.containerHeight) {
@@ -197,6 +179,11 @@ var InfiniteScoller = _react2['default'].createClass({
             this.prepareVisibleRows(0, this.state.visibleRows.length + 1);
           }
       }
+    } else if (this.rowJumpTriggered) {
+      this.rowJumpTriggered = false;
+      // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
+      adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.children[this.state.visibleRows.indexOf(this.rowJumpedTo)].getBoundingClientRect().top;
+      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
     } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
       // scroll to align the tops of the boxes
       adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
@@ -206,17 +193,18 @@ var InfiniteScoller = _react2['default'].createClass({
     } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
       // scroll to align the bottoms of the boxes
       adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
-      //   console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
+      // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
       // this.adjustmentScroll = true;
       infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
     }
   },
 
   componentWillMount: function componentWillMount() {
-    // this is the only place where we use preloadRowStart
     var newRowStart = 0;
-    if (this.props.preloadRowStart < this.props.totalNumberOfRows) {
-      newRowStart = this.props.preloadRowStart;
+    if (this.props.rowToJumpTo && this.props.rowToJumpTo.row && this.props.rowToJumpTo.row < this.props.totalNumberOfRows) {
+      newRowStart = this.props.rowToJumpTo.row;
+      this.rowJumpTriggered = true;
+      this.rowJumpedTo = this.props.rowToJumpTo.row;
     }
     this.prepareVisibleRows(newRowStart, 4);
   },
@@ -224,15 +212,16 @@ var InfiniteScoller = _react2['default'].createClass({
   componentDidMount: function componentDidMount() {
     // call componentDidUpdate so that the scroll position will be adjusted properly
     // (we may load a random row in the middle of the sequence and not have the infinte container scrolled properly
-    // initially, so we scroll to the show the rowContainer)
+    // initially, so we scroll to show the rowContainer)
     this.componentDidUpdate();
   },
 
-  prepareVisibleRows: function prepareVisibleRows(rowStart, newNumberOfRowsToDisplay) {
+  prepareVisibleRows: function prepareVisibleRows(rowStart, newNumberOfRowsToDisplay, newTotalNumberOfRows) {
     // note, rowEnd is optional
     this.numberOfRowsToDisplay = newNumberOfRowsToDisplay;
-    if (rowStart + newNumberOfRowsToDisplay > this.props.totalNumberOfRows) {
-      this.rowEnd = this.props.totalNumberOfRows - 1;
+    var totalNumberOfRows = _validateIoNonnegativeIntegerArray2['default']([newTotalNumberOfRows]) ? newTotalNumberOfRows : this.props.totalNumberOfRows;
+    if (rowStart + newNumberOfRowsToDisplay > totalNumberOfRows) {
+      this.rowEnd = totalNumberOfRows - 1;
     } else {
       this.rowEnd = rowStart + newNumberOfRowsToDisplay - 1;
     }
