@@ -18,7 +18,7 @@ var InfiniteScoller = _react2['default'].createClass({
   displayName: 'InfiniteScoller',
 
   propTypes: {
-    averageElementHeight: _react.PropTypes.number.isRequired,
+    averageElementHeight: _react.PropTypes.number,
     containerHeight: _react.PropTypes.number.isRequired,
     totalNumberOfRows: _react.PropTypes.number.isRequired,
     renderRow: _react.PropTypes.func.isRequired,
@@ -33,7 +33,8 @@ var InfiniteScoller = _react2['default'].createClass({
   getDefaultProps: function getDefaultProps() {
     return {
       onScroll: noop,
-      containerClassName: 'infiniteContainer'
+      containerClassName: 'infiniteContainer',
+      averageElementHeight: 100
     };
   },
 

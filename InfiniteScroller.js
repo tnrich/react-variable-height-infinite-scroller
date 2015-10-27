@@ -5,7 +5,7 @@ function noop() {}
 
 const InfiniteScoller = React.createClass({
   propTypes: {
-    averageElementHeight: PropTypes.number.isRequired,
+    averageElementHeight: PropTypes.number,
     containerHeight: PropTypes.number.isRequired,
     totalNumberOfRows: PropTypes.number.isRequired,
     renderRow: PropTypes.func.isRequired,
@@ -21,6 +21,7 @@ const InfiniteScoller = React.createClass({
     return {
       onScroll: noop,
       containerClassName: 'infiniteContainer',
+      averageElementHeight: 100,
     };
   },
 
