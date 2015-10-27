@@ -39,6 +39,7 @@ const Example2 = React.createClass({
           const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
           this.setState({
             fakeRows: newFakeRows,
+            rowToJumpTo: {row: 9},
             newRowToJumpTo: {row: 9},
           });
         }}>
