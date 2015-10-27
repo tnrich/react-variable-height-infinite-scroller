@@ -56,6 +56,10 @@
 
 	var _InfiniteScrollerJs2 = _interopRequireDefault(_InfiniteScrollerJs);
 
+	var _example2Js = __webpack_require__(163);
+
+	var _example2Js2 = _interopRequireDefault(_example2Js);
+
 	function getFakeRowsWithHeights(numberOfRows) {
 	  var newFakeRows = [];
 	  for (var i = 0; i < numberOfRows; i++) {
@@ -86,7 +90,7 @@
 	    var newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
 	    return _react2['default'].createElement(
 	      'div',
-	      { overflow: 'scroll' },
+	      { style: { width: 300 }, overflow: 'scroll' },
 	      _react2['default'].createElement(
 	        'h3',
 	        null,
@@ -122,10 +126,9 @@
 	      _react2['default'].createElement(_InfiniteScrollerJs2['default'], {
 	        averageElementHeight: 100, // this is a guess you make!
 	        containerHeight: 600,
-	        rowToJumpTo: this.state.rowToJumpTo, // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
+	        rowToJumpTo: this.state.rowToJumpTo, // (optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
 	        renderRow: this.renderRow, // function to render a row
-	        totalNumberOfRows: this.state.fakeRows.length, // an array of data for your rows
-	        preloadRowStart: 10 // if you want to start at a particular row to begin with
+	        totalNumberOfRows: this.state.fakeRows.length // an array of data for your rows
 	      })
 	    );
 	  },
@@ -136,107 +139,23 @@
 	      'div',
 	      {
 	        key: rowNumber,
-	        style: { height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange' }
+	        style: { height: heightOfRow, background: rowNumber % 2 === 0 ? 'red' : 'orange' }
 	      },
-	      heightOfRow
-	    );
-	  }
-	});
-
-	function get10FakeRowsWithHeights(numberOfRows) {
-	  var newFakeRows = [];
-	  for (var i = 0; i < numberOfRows; i++) {
-	    newFakeRows.push({ height: Math.floor(1000 * Math.random()) });
-	  }
-	  return newFakeRows;
-	}
-
-	var Example2 = _react2['default'].createClass({
-	  displayName: 'Example2',
-
-	  getNewRandomRow: function getNewRandomRow() {
-	    return { row: 9 };
-	  },
-
-	  getInitialState: function getInitialState() {
-	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
-	    var newNumberOfRowsToDisplay = 10;
-	    var newFakeRows = get10FakeRowsWithHeights(newNumberOfRowsToDisplay);
-	    return {
-	      rowToJumpTo: { row: 9 },
-	      newRowToJumpTo: 9,
-	      fakeRows: newFakeRows
-	    };
-	  },
-	  render: function render() {
-	    var _this2 = this;
-
-	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
-	    var newNumberOfRowsToDisplay = 10;
-	    return _react2['default'].createElement(
-	      'div',
-	      { overflow: 'scroll' },
-	      _react2['default'].createElement(
-	        'h3',
-	        null,
-	        'Example 1: Random number of rows and row heights'
-	      ),
-	      _react2['default'].createElement(
-	        'button',
-	        { onClick: function () {
-	            _this2.setState({
-	              rowToJumpTo: _this2.state.newRowToJumpTo,
-	              newRowToJumpTo: _this2.getNewRandomRow(_this2.state.fakeRows.length)
-	            });
-	          } },
-	        'Jump to a random row: Row #',
-	        this.state.newRowToJumpTo.row,
-	        ' (its height is ',
-	        this.state.fakeRows[this.state.newRowToJumpTo.row].height,
-	        ')'
-	      ),
-	      _react2['default'].createElement(
-	        'button',
-	        { onClick: function () {
-	            var newFakeRows = get10FakeRowsWithHeights(newNumberOfRowsToDisplay);
-	            _this2.setState({
-	              fakeRows: newFakeRows,
-	              newRowToJumpTo: 9
-	            });
-	          } },
-	        'Create ',
-	        newNumberOfRowsToDisplay,
-	        ' new rows'
-	      ),
-	      _react2['default'].createElement(_InfiniteScrollerJs2['default'], {
-	        averageElementHeight: 100, // this is a guess you make!
-	        containerHeight: 600,
-	        rowToJumpTo: this.state.rowToJumpTo, // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
-	        renderRow: this.renderRow, // function to render a row
-	        totalNumberOfRows: this.state.fakeRows.length, // an array of data for your rows
-	        preloadRowStart: 10 // if you want to start at a particular row to begin with
-	      })
-	    );
-	  },
-
-	  renderRow: function renderRow(rowNumber) {
-	    var heightOfRow = this.state.fakeRows[rowNumber].height;
-	    return _react2['default'].createElement(
-	      'div',
-	      {
-	        key: rowNumber,
-	        style: { height: heightOfRow, background: heightOfRow % 2 === 0 ? 'red' : 'orange' }
-	      },
-	      heightOfRow
+	      'Height: ',
+	      heightOfRow,
+	      _react2['default'].createElement('br', null),
+	      'Row Number: ',
+	      rowNumber
 	    );
 	  }
 	});
 
 	_react2['default'].render(_react2['default'].createElement(
 	  'div',
-	  null,
+	  { style: { display: 'flex' } },
 	  _react2['default'].createElement(Example1, null),
-	  _react2['default'].createElement(Example2, null)
+	  _react2['default'].createElement('div', { style: { width: 100 } }),
+	  _react2['default'].createElement(_example2Js2['default'], null)
 	), document.getElementById('container'));
 
 /***/ },
@@ -20801,35 +20720,26 @@
 	          }
 	      }
 	    } else if (this.rowJumpTriggered) {
-	      // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
 	      this.rowJumpTriggered = false;
+	      // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
 	      adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.children[this.state.visibleRows.indexOf(this.rowJumpedTo)].getBoundingClientRect().top;
 	      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
-
-	      // if (this.rowJumpedTo === this.state.visibleRows[0]) {
-	      //   // we've successfully jumped to that row as the top row!
-	      //   // but it probably needs to be adjusted to be centered/at the top of the users viewport
-	      //   adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
-	      //   infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
-	      //   // this.adjustmentScroll = true;
-	      // }
 	    } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
-	        // scroll to align the tops of the boxes
-	        adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
-	        console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: ' + adjustInfiniteContainerByThisAmount);
-	        // this.adjustmentScroll = true;
-	        infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
-	      } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
-	        // scroll to align the bottoms of the boxes
-	        adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
-	        console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: ' + adjustInfiniteContainerByThisAmount);
-	        // this.adjustmentScroll = true;
-	        infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
-	      }
+	      // scroll to align the tops of the boxes
+	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
+	      // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountTop: '+adjustInfiniteContainerByThisAmount)
+	      // this.adjustmentScroll = true;
+	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
+	    } else if (visibleRowsContainer.getBoundingClientRect().bottom < infiniteContainer.getBoundingClientRect().bottom) {
+	      // scroll to align the bottoms of the boxes
+	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().bottom - infiniteContainer.getBoundingClientRect().bottom;
+	      // console.log('!@#!@#!@#!@#!@#!@#!@#adjustInfiniteContainerByThisAmountBottom: '+adjustInfiniteContainerByThisAmount)
+	      // this.adjustmentScroll = true;
+	      infiniteContainer.scrollTop = infiniteContainer.scrollTop + adjustInfiniteContainerByThisAmount;
+	    }
 	  },
 
 	  componentWillMount: function componentWillMount() {
-	    // this is the only place where we use preloadRowStart
 	    var newRowStart = 0;
 	    if (this.props.rowToJumpTo && this.props.rowToJumpTo.row && this.props.rowToJumpTo.row < this.props.totalNumberOfRows) {
 	      newRowStart = this.props.rowToJumpTo.row;
@@ -20842,7 +20752,7 @@
 	  componentDidMount: function componentDidMount() {
 	    // call componentDidUpdate so that the scroll position will be adjusted properly
 	    // (we may load a random row in the middle of the sequence and not have the infinte container scrolled properly
-	    // initially, so we scroll to the show the rowContainer)
+	    // initially, so we scroll to show the rowContainer)
 	    this.componentDidUpdate();
 	  },
 
@@ -21176,6 +21086,115 @@
 
 	module.exports = isNumber;
 
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InfiniteScrollerJs = __webpack_require__(157);
+
+	var _InfiniteScrollerJs2 = _interopRequireDefault(_InfiniteScrollerJs);
+
+	function getFakeRowsWithHeights(numberOfRows) {
+	  var newFakeRows = [];
+	  for (var i = 0; i < numberOfRows; i++) {
+	    newFakeRows.push({ height: Math.floor(1000 * Math.random()) });
+	  }
+	  return newFakeRows;
+	}
+
+	var Example2 = _react2['default'].createClass({
+	  displayName: 'Example2',
+
+	  getInitialState: function getInitialState() {
+	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    var newNumberOfRowsToDisplay = 10;
+	    var newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
+	    return {
+	      rowToJumpTo: { row: 9 },
+	      newRowToJumpTo: { row: 9 },
+	      fakeRows: newFakeRows
+	    };
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    var newNumberOfRowsToDisplay = 10;
+	    return _react2['default'].createElement(
+	      'div',
+	      { style: { width: 300 }, overflow: 'scroll' },
+	      _react2['default'].createElement(
+	        'h3',
+	        null,
+	        'Example 2: 10 rows of random height with bottom row the "jumpToRow"'
+	      ),
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            _this.setState({
+	              rowToJumpTo: _this.state.newRowToJumpTo,
+	              newRowToJumpTo: { row: 9 }
+	            });
+	          } },
+	        'Jump to the last row: Row #',
+	        this.state.newRowToJumpTo.row,
+	        ' (its height is ',
+	        this.state.fakeRows[this.state.newRowToJumpTo.row].height,
+	        ')'
+	      ),
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            var newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
+	            _this.setState({
+	              fakeRows: newFakeRows,
+	              newRowToJumpTo: { row: 9 }
+	            });
+	          } },
+	        'Create ',
+	        newNumberOfRowsToDisplay,
+	        ' new rows'
+	      ),
+	      _react2['default'].createElement(_InfiniteScrollerJs2['default'], {
+	        averageElementHeight: 100, // this is a guess you make!
+	        containerHeight: 600,
+	        rowToJumpTo: this.state.rowToJumpTo, // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
+	        renderRow: this.renderRow, // function to render a row
+	        totalNumberOfRows: this.state.fakeRows.length // an array of data for your rows
+	      })
+	    );
+	  },
+
+	  renderRow: function renderRow(rowNumber) {
+	    var heightOfRow = this.state.fakeRows[rowNumber].height;
+	    return _react2['default'].createElement(
+	      'div',
+	      {
+	        key: rowNumber,
+	        style: { height: heightOfRow, background: rowNumber % 2 === 0 ? 'red' : 'orange' }
+	      },
+	      'Height: ',
+	      heightOfRow,
+	      _react2['default'].createElement('br', null),
+	      'Row Number: ',
+	      rowNumber
+	    );
+	  }
+	});
+
+	exports['default'] = Example2;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
