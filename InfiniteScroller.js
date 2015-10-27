@@ -7,12 +7,12 @@ const InfiniteScoller = React.createClass({
   propTypes: {
     averageElementHeight: PropTypes.number.isRequired,
     containerHeight: PropTypes.number.isRequired,
-    preloadRowStart: PropTypes.number.isRequired,
     totalNumberOfRows: PropTypes.number.isRequired,
     renderRow: PropTypes.func.isRequired,
     rowToJumpTo: PropTypes.shape({
       row: PropTypes.number,
     }),
+    jumpToBottomOfRow: PropTypes.bool,
     containerClassName: PropTypes.string,
     onScroll: PropTypes.func,
   },
@@ -168,8 +168,14 @@ const InfiniteScoller = React.createClass({
       }
     } else if (this.rowJumpTriggered) {
       this.rowJumpTriggered = false;
+      const icbr = infiniteContainer.getBoundingClientRect();
+      const rbr = visibleRowsContainer.children[(this.state.visibleRows.indexOf(this.rowJumpedTo))].getBoundingClientRect();
       // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
-      adjustInfiniteContainerByThisAmount = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.children[(this.state.visibleRows.indexOf(this.rowJumpedTo))].getBoundingClientRect().top;
+      if (this.props.jumpToBottomOfRow) {
+        adjustInfiniteContainerByThisAmount = icbr.bottom - rbr.bottom;
+      } else {
+        adjustInfiniteContainerByThisAmount = icbr.top - rbr.top;
+      }
       infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
     } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
       // scroll to align the tops of the boxes
