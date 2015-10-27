@@ -20,14 +20,15 @@ npm i --save react-variable-height-infinite-scroller
 
 | Name | Default | Description |
 | :--- |:---:| :---|
-| averageElementHeight `number` | *(optional)* 100 | This is a guess you make of what is the average height. This is used to approximate number of rows when rendering more or less rows |
 | containerHeight `number` | __required__ | Maximum height of the scroll container |
 | totalNumberOfRows `number` | __required__ | Length of the data array |
 | renderRow `function` | __required__ | Function to render a row |
+| averageElementHeight `number` | *(optional)* 100 | This is a guess you make of what the average row height will be height. This is used to approximate how far to move the scrollbar |
 | rowToJumpTo | *(optional)* 0 | Object of shape `{ row: Number }`. Row you want to start with or jump to. Must be passed as a new object each time to allow for difference checking |
+| jumpToBottomOfRow `boolean` | *(optional)* false |  By default jumping to a row jumps to the top. Set to true if you want to jump to the bottom of the row |
 | containerClassName `string` | *(optional)* infiniteContainer | className to apply on container |
-| onScroll `function` | *(optional)* no-op |  Hook to call on scroll
-| jumpToBottomOfRow `boolean` | *(optional)* false |  By default jumping to a row jumps to the top. Set to true if you want to jump to the bottom of the row
+| onScroll `function` | *(optional)* no-op |  Hook to call on scroll |
+
 
 Taken from the demo code: 
 
