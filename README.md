@@ -27,15 +27,13 @@ npm i --save react-variable-height-infinite-scroller
 | rowToJumpTo | *(optional)* | Object of shape `{ row: Number }`. Row you want to start with or jump to. Must be passed as a new object each time to allow for difference checking |
 | containerClassName `string` | *(optional)* infiniteContainer | className to apply on container |
 | onScroll `function` | *(optional)* no-op |  Hook to call on scroll
-
-
+| jumpToBottomOfRow `function` | *(optional)* false |  By default jumping to a row jumps to the top. Set to true if you want to jump to the bottom of the row
 
 Taken from the demo code: 
 
 ```javascript
 import React from 'react';
 import InfiniteScroller from './InfiniteScroller.js';
-import Example2 from './example2.js';
 
 function getFakeRowsWithHeights(numberOfRows) {
   let newFakeRows = [];
@@ -110,7 +108,7 @@ const Example1 = React.createClass({
   },
 });
 
-React.render(<Example />, document.getElementById('container'));
+React.render(<Example1 />, document.getElementById('container'));
 ```
 
 # Contributing

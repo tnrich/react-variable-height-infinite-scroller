@@ -1,3 +1,10 @@
+v3.1.0 - Tue, 27 Oct 2015 17:39:32 GMT
+--------------------------------------
+
+- [04764f8](../../commit/04764f8) [added] ability to jump to the bottom of a row instead of the top
+
+
+
 v3.0.1 - Tue, 27 Oct 2015 04:40:28 GMT
 --------------------------------------
 

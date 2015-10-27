@@ -1,6 +1,7 @@
 import React from 'react';
 import InfiniteScroller from './InfiniteScroller.js';
 import Example2 from './example2.js';
+import Example3 from './example3.js';
 
 function getFakeRowsWithHeights(numberOfRows) {
   let newFakeRows = [];
@@ -80,5 +81,7 @@ React.render((
     <Example1 />
     <div style={{width: 100}}/>
     <Example2 />
+    <div style={{width: 100}}/>
+    <Example3 />
   </div>
   ), document.getElementById('container'));

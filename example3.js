@@ -8,7 +8,7 @@ function getFakeRowsWithHeights(numberOfRows) {
   return newFakeRows;
 }
 
-const Example2 = React.createClass({
+const Example3 = React.createClass({
   getInitialState() {
     // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
     const newNumberOfRowsToDisplay = 10;
@@ -25,7 +25,7 @@ const Example2 = React.createClass({
     return (
       <div style={{width: 300}} overflow="scroll">
         <h3>
-          Example 2: Ten rows of random height with last row the "rowToJumpTo"
+          Example 3: Ten rows of random height with last row the "rowToJumpTo" and jumpToBottomOfRow=true.
         </h3>
         <button onClick={() => {
           this.setState({
@@ -46,10 +46,11 @@ const Example2 = React.createClass({
         </button>
         <InfiniteScroller
           averageElementHeight={100} // this is a guess you make!
-          containerHeight={600}
+          containerHeight={600} // how tall you want the container to be
           rowToJumpTo={this.state.rowToJumpTo} // (optional) row you want to jump to. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
           totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
+          jumpToBottomOfRow // (optional) by default jumping to a row jumps to the top, set to true if you want to jump to the bottom of the row
         />
       </div>
     );
@@ -70,4 +71,4 @@ const Example2 = React.createClass({
   },
 });
 
-export default Example2;
+export default Example3;
