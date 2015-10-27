@@ -27,7 +27,7 @@ const Example1 = React.createClass({
   render() {
     const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
     return (
-      <div style={{width:300}} overflow="scroll">
+      <div style={{width: 300}} overflow="scroll">
         <h3>
         Example 1: Random number of rows and row heights
         </h3>
@@ -52,10 +52,10 @@ const Example1 = React.createClass({
         <InfiniteScroller
           averageElementHeight={100} // this is a guess you make!
           containerHeight={600}
-          rowToJumpTo={this.state.rowToJumpTo} //(optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
+          rowToJumpTo={this.state.rowToJumpTo} // (optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
           totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
-          preloadRowStart={10} 
+          preloadRowStart={10}
         />
       </div>
     );
