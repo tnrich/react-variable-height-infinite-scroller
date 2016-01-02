@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import areNonNegativeIntegers from 'validate.io-nonnegative-integer-array';
 
 function noop() {}
@@ -34,7 +35,7 @@ const InfiniteScoller = React.createClass({
     }
 
     let infiniteContainer = event.currentTarget;
-    const visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
+    const visibleRowsContainer = ReactDOM.findDOMNode(this.refs.visibleRowsContainer);
     // const currentAverageElementHeight = (visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length);
     this.oldRowStart = this.rowStart;
     const distanceFromTopOfVisibleRows = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
@@ -89,7 +90,7 @@ const InfiniteScoller = React.createClass({
   },
 
   componentWillUpdate() {
-    let visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
+    let visibleRowsContainer = ReactDOM.findDOMNode(this.refs.visibleRowsContainer);
     this.soonToBeRemovedRowElementHeights = 0;
     this.numberOfRowsAddedToTop = 0;
     if (this.updateTriggeredByScroll === true) {
@@ -117,8 +118,8 @@ const InfiniteScoller = React.createClass({
     // strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
     // thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we
     // make the replacements
-    let infiniteContainer = React.findDOMNode(this.refs.infiniteContainer);
-    let visibleRowsContainer = React.findDOMNode(this.refs.visibleRowsContainer);
+    let infiniteContainer = ReactDOM.findDOMNode(this.refs.infiniteContainer);
+    let visibleRowsContainer = ReactDOM.findDOMNode(this.refs.visibleRowsContainer);
     if (this.soonToBeRemovedRowElementHeights) {
       infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeights;
     }
@@ -238,7 +239,7 @@ const InfiniteScoller = React.createClass({
 
   // public method
   getVisibleRowsContainerDomNode() {
-    return React.findDOMNode(this.refs.visibleRowsContainer);
+    return ReactDOM.findDOMNode(this.refs.visibleRowsContainer);
   },
 
   render() {

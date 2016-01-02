@@ -8,6 +8,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 var _validateIoNonnegativeIntegerArray = require('validate.io-nonnegative-integer-array');
 
 var _validateIoNonnegativeIntegerArray2 = _interopRequireDefault(_validateIoNonnegativeIntegerArray);
@@ -47,7 +51,7 @@ var InfiniteScoller = _react2['default'].createClass({
     }
 
     var infiniteContainer = event.currentTarget;
-    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
+    var visibleRowsContainer = _reactDom2['default'].findDOMNode(this.refs.visibleRowsContainer);
     // const currentAverageElementHeight = (visibleRowsContainer.getBoundingClientRect().height / this.state.visibleRows.length);
     this.oldRowStart = this.rowStart;
     var distanceFromTopOfVisibleRows = infiniteContainer.getBoundingClientRect().top - visibleRowsContainer.getBoundingClientRect().top;
@@ -102,7 +106,7 @@ var InfiniteScoller = _react2['default'].createClass({
   },
 
   componentWillUpdate: function componentWillUpdate() {
-    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
+    var visibleRowsContainer = _reactDom2['default'].findDOMNode(this.refs.visibleRowsContainer);
     this.soonToBeRemovedRowElementHeights = 0;
     this.numberOfRowsAddedToTop = 0;
     if (this.updateTriggeredByScroll === true) {
@@ -130,8 +134,8 @@ var InfiniteScoller = _react2['default'].createClass({
     // strategy: as we scroll, we're losing or gaining rows from the top and replacing them with rows of the "averageRowHeight"
     // thus we need to adjust the scrollTop positioning of the infinite container so that the UI doesn't jump as we
     // make the replacements
-    var infiniteContainer = _react2['default'].findDOMNode(this.refs.infiniteContainer);
-    var visibleRowsContainer = _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
+    var infiniteContainer = _reactDom2['default'].findDOMNode(this.refs.infiniteContainer);
+    var visibleRowsContainer = _reactDom2['default'].findDOMNode(this.refs.visibleRowsContainer);
     if (this.soonToBeRemovedRowElementHeights) {
       infiniteContainer.scrollTop = infiniteContainer.scrollTop + this.soonToBeRemovedRowElementHeights;
     }
@@ -252,7 +256,7 @@ var InfiniteScoller = _react2['default'].createClass({
 
   // public method
   getVisibleRowsContainerDomNode: function getVisibleRowsContainerDomNode() {
-    return _react2['default'].findDOMNode(this.refs.visibleRowsContainer);
+    return _reactDom2['default'].findDOMNode(this.refs.visibleRowsContainer);
   },
 
   render: function render() {
