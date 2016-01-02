@@ -16,6 +16,16 @@ npm i --save react-variable-height-infinite-scroller
 
 # Usage:
 
+```
+<InfiniteScroller
+  averageElementHeight={100} // this is a guess you make!
+  containerHeight={600}
+  rowToJumpTo={rowToJumpTo} // (optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
+  renderRow={renderRow} // function to render a row
+  totalNumberOfRows={fakeRows.length} // an array of data for your rows
+/>
+```
+
 ## Props
 
 | Name | Default | Description |
