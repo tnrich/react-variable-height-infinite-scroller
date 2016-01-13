@@ -1,3 +1,10 @@
+v3.3.3 - Wed, 13 Jan 2016 07:33:19 GMT
+--------------------------------------
+
+- [0f4e0cf](../../commit/0f4e0cf) [fixed] error with jumping to a row when dealing with a  small number of rows + small row heights relative to the size of container
+
+
+
 v3.3.1 - Sat, 02 Jan 2016 08:27:05 GMT
 --------------------------------------
 
