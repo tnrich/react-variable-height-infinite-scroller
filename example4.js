@@ -1,24 +1,22 @@
 import React from 'react';
 import InfiniteScroller from './InfiniteScroller.js';
-import Example2 from './example2.js';
-import Example3 from './example3.js';
-import Example4 from './example4.js';
 
 function getFakeRowsWithHeights(numberOfRows) {
   let newFakeRows = [];
   for (let i = 0; i < numberOfRows; i++) {
-    newFakeRows.push({height: Math.floor(1000 * Math.random())});
+    newFakeRows.push({height: Math.floor(40 * Math.random())});
   }
   return newFakeRows;
 }
 
-const Example1 = React.createClass({
+const Example4 = React.createClass({
   getNewRandomRow(totalRows) {
     return {row: Math.floor(totalRows * Math.random())};
   },
 
   getInitialState() {
-    const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+    const newNumberOfRowsToDisplay = 32;
+    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
     const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
     return {
       rowToJumpTo: null,
@@ -27,11 +25,12 @@ const Example1 = React.createClass({
     };
   },
   render() {
-    const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+    const newNumberOfRowsToDisplay = 32;
+    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
     return (
       <div style={{width: 300}} overflow="scroll">
         <h3>
-        Example 1: Random number of rows and row heights
+        Example 4: A small number of rows all with small heights
         </h3>
         <button onClick={() => {
           this.setState({
@@ -52,8 +51,8 @@ const Example1 = React.createClass({
         </button>
 
         <InfiniteScroller
-          averageElementHeight={100} // this is a guess you make!
-          containerHeight={600}
+          averageElementHeight={20} // this is a guess you make!
+          containerHeight={336}
           rowToJumpTo={this.state.rowToJumpTo} // (optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row
           totalNumberOfRows={this.state.fakeRows.length} // an array of data for your rows
@@ -77,14 +76,4 @@ const Example1 = React.createClass({
   },
 });
 
-React.render((
-  <div style={{display: 'flex'}} >
-    <Example1 />
-    <div style={{width: 100}}/>
-    <Example2 />
-    <div style={{width: 100}}/>
-    <Example3 />
-    <div style={{width: 100}}/>
-    <Example4 />
-  </div>
-  ), document.getElementById('container'));
+export default Example4;

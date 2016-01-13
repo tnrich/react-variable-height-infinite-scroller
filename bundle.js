@@ -19917,8 +19917,19 @@
 	      }
 	      throw new Error('no visible rows!!');
 	    }
-
 	    var adjustInfiniteContainerByThisAmount = undefined;
+	    function adjustScrollHeightToRowJump() {
+	      this.rowJumpTriggered = false;
+	      var icbr = infiniteContainer.getBoundingClientRect();
+	      var vrbr = visibleRowsContainer.children[this.state.visibleRows.indexOf(this.rowJumpedTo)].getBoundingClientRect();
+	      // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
+	      if (this.props.jumpToBottomOfRow) {
+	        adjustInfiniteContainerByThisAmount = icbr.bottom - vrbr.bottom;
+	      } else {
+	        adjustInfiniteContainerByThisAmount = icbr.top - vrbr.top;
+	      }
+	      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
+	    }
 	    // check if the visible rows fill up the viewport
 	    // tnrtodo: maybe put logic in here to reshrink the number of rows to display... maybe...
 	    if (visibleRowsContainer.getBoundingClientRect().height / 2 <= this.props.containerHeight) {
@@ -19927,24 +19938,19 @@
 	        // load another row to the bottom
 	        this.prepareVisibleRows(this.rowStart, this.state.visibleRows.length + 1);
 	      } else {
-	        // there aren't more rows that we can load at the bottom so we load more at the top
+	        // there aren't more rows that we can load at the bottom
 	        if (this.rowStart - 1 > 0) {
+	          // so we load more at the top
 	          this.prepareVisibleRows(this.rowStart - 1, this.state.visibleRows.length + 1); // don't want to just shift view
-	        } else if (this.state.visibleRows.length < this.props.totalNumberOfRows) {
-	            this.prepareVisibleRows(0, this.state.visibleRows.length + 1);
+	        } else {
+	            // all the rows are already visible
+	            if (this.rowJumpTriggered) {
+	              adjustScrollHeightToRowJump.call(this);
+	            }
 	          }
 	      }
 	    } else if (this.rowJumpTriggered) {
-	      this.rowJumpTriggered = false;
-	      var icbr = infiniteContainer.getBoundingClientRect();
-	      var rbr = visibleRowsContainer.children[this.state.visibleRows.indexOf(this.rowJumpedTo)].getBoundingClientRect();
-	      // if a rowJump has been triggered, we need to adjust the row to sit at the top of the infinite container
-	      if (this.props.jumpToBottomOfRow) {
-	        adjustInfiniteContainerByThisAmount = icbr.bottom - rbr.bottom;
-	      } else {
-	        adjustInfiniteContainerByThisAmount = icbr.top - rbr.top;
-	      }
-	      infiniteContainer.scrollTop = infiniteContainer.scrollTop - adjustInfiniteContainerByThisAmount;
+	      adjustScrollHeightToRowJump.call(this);
 	    } else if (visibleRowsContainer.getBoundingClientRect().top > infiniteContainer.getBoundingClientRect().top) {
 	      // scroll to align the tops of the boxes
 	      adjustInfiniteContainerByThisAmount = visibleRowsContainer.getBoundingClientRect().top - infiniteContainer.getBoundingClientRect().top;
