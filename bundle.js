@@ -64,6 +64,10 @@
 
 	var _example3Js2 = _interopRequireDefault(_example3Js);
 
+	var _example4Js = __webpack_require__(167);
+
+	var _example4Js2 = _interopRequireDefault(_example4Js);
+
 	function getFakeRowsWithHeights(numberOfRows) {
 	  var newFakeRows = [];
 	  for (var i = 0; i < numberOfRows; i++) {
@@ -161,7 +165,9 @@
 	  _react2['default'].createElement('div', { style: { width: 100 } }),
 	  _react2['default'].createElement(_example2Js2['default'], null),
 	  _react2['default'].createElement('div', { style: { width: 100 } }),
-	  _react2['default'].createElement(_example3Js2['default'], null)
+	  _react2['default'].createElement(_example3Js2['default'], null),
+	  _react2['default'].createElement('div', { style: { width: 100 } }),
+	  _react2['default'].createElement(_example4Js2['default'], null)
 	), document.getElementById('container'));
 
 /***/ },
@@ -20542,6 +20548,119 @@
 	});
 
 	exports['default'] = Example3;
+	module.exports = exports['default'];
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InfiniteScrollerJs = __webpack_require__(158);
+
+	var _InfiniteScrollerJs2 = _interopRequireDefault(_InfiniteScrollerJs);
+
+	function getFakeRowsWithHeights(numberOfRows) {
+	  var newFakeRows = [];
+	  for (var i = 0; i < numberOfRows; i++) {
+	    newFakeRows.push({ height: Math.floor(40 * Math.random()) });
+	  }
+	  return newFakeRows;
+	}
+
+	var Example4 = _react2['default'].createClass({
+	  displayName: 'Example4',
+
+	  getNewRandomRow: function getNewRandomRow(totalRows) {
+	    return { row: Math.floor(totalRows * Math.random()) };
+	  },
+
+	  getInitialState: function getInitialState() {
+	    var newNumberOfRowsToDisplay = 32;
+	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    var newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
+	    return {
+	      rowToJumpTo: null,
+	      newRowToJumpTo: this.getNewRandomRow(newFakeRows.length),
+	      fakeRows: newFakeRows
+	    };
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    var newNumberOfRowsToDisplay = 32;
+	    // const newNumberOfRowsToDisplay = Math.floor(Math.random() * 200);
+	    return _react2['default'].createElement(
+	      'div',
+	      { style: { width: 300 }, overflow: 'scroll' },
+	      _react2['default'].createElement(
+	        'h3',
+	        null,
+	        'Example 4: A small number of rows all with small heights'
+	      ),
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            _this.setState({
+	              rowToJumpTo: _this.state.newRowToJumpTo,
+	              newRowToJumpTo: _this.getNewRandomRow(_this.state.fakeRows.length)
+	            });
+	          } },
+	        'Jump to a random row: Row #',
+	        this.state.newRowToJumpTo.row,
+	        ' (its height is ',
+	        this.state.fakeRows[this.state.newRowToJumpTo.row].height,
+	        ')'
+	      ),
+	      _react2['default'].createElement(
+	        'button',
+	        { onClick: function () {
+	            var newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
+	            _this.setState({
+	              fakeRows: newFakeRows,
+	              newRowToJumpTo: _this.getNewRandomRow(newFakeRows.length)
+	            });
+	          } },
+	        'Create ',
+	        newNumberOfRowsToDisplay,
+	        ' new rows'
+	      ),
+	      _react2['default'].createElement(_InfiniteScrollerJs2['default'], {
+	        averageElementHeight: 20, // this is a guess you make!
+	        containerHeight: 336,
+	        rowToJumpTo: this.state.rowToJumpTo, // (optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
+	        renderRow: this.renderRow, // function to render a row
+	        totalNumberOfRows: this.state.fakeRows.length // an array of data for your rows
+	      })
+	    );
+	  },
+
+	  renderRow: function renderRow(rowNumber) {
+	    var heightOfRow = this.state.fakeRows[rowNumber].height;
+	    return _react2['default'].createElement(
+	      'div',
+	      {
+	        key: rowNumber,
+	        style: { height: heightOfRow, background: rowNumber % 2 === 0 ? 'red' : 'orange' }
+	      },
+	      'Height: ',
+	      heightOfRow,
+	      _react2['default'].createElement('br', null),
+	      'Row Number: ',
+	      rowNumber
+	    );
+	  }
+	});
+
+	exports['default'] = Example4;
 	module.exports = exports['default'];
 
 /***/ }
