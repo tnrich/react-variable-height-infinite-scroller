@@ -31,7 +31,8 @@ var InfiniteScoller = _react2['default'].createClass({
     }),
     jumpToBottomOfRow: _react.PropTypes.bool,
     containerClassName: _react.PropTypes.string,
-    onScroll: _react.PropTypes.func
+    onScroll: _react.PropTypes.func,
+    style: _react.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -286,7 +287,7 @@ var InfiniteScoller = _react2['default'].createClass({
       {
         ref: 'infiniteContainer',
         className: this.props.containerClassName,
-        style: infiniteContainerStyle,
+        style: Object.assign(infiniteContainerStyle, this.props.style || {}),
         onScroll: this.onEditorScroll
       },
       _react2['default'].createElement('div', { className: 'topSpacer', style: { height: this.topSpacerHeight } }),

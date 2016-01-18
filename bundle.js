@@ -16781,15 +16781,21 @@
 	 * @typechecks
 	 */
 
+	/* eslint-disable fb-www/typeof-undefined */
+
 	/**
 	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
 	 * not safe to call document.activeElement if there is nothing focused.
 	 *
-	 * The activeElement will be null only if the document body is not yet defined.
+	 * The activeElement will be null only if the document or document body is not
+	 * yet defined.
 	 */
-	"use strict";
+	'use strict';
 
 	function getActiveElement() /*?DOMElement*/{
+	  if (typeof document === 'undefined') {
+	    return null;
+	  }
 	  try {
 	    return document.activeElement || document.body;
 	  } catch (e) {
@@ -18788,7 +18794,7 @@
 
 	'use strict';
 
-	module.exports = '0.14.5';
+	module.exports = '0.14.6';
 
 /***/ },
 /* 147 */
@@ -19787,7 +19793,8 @@
 	    }),
 	    jumpToBottomOfRow: _react.PropTypes.bool,
 	    containerClassName: _react.PropTypes.string,
-	    onScroll: _react.PropTypes.func
+	    onScroll: _react.PropTypes.func,
+	    style: _react.PropTypes.object
 	  },
 
 	  getDefaultProps: function getDefaultProps() {
@@ -20042,7 +20049,7 @@
 	      {
 	        ref: 'infiniteContainer',
 	        className: this.props.containerClassName,
-	        style: infiniteContainerStyle,
+	        style: Object.assign(infiniteContainerStyle, this.props.style || {}),
 	        onScroll: this.onEditorScroll
 	      },
 	      _react2['default'].createElement('div', { className: 'topSpacer', style: { height: this.topSpacerHeight } }),
