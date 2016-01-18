@@ -16,6 +16,7 @@ const InfiniteScoller = React.createClass({
     jumpToBottomOfRow: PropTypes.bool,
     containerClassName: PropTypes.string,
     onScroll: PropTypes.func,
+    style: PropTypes.object,
   },
 
   getDefaultProps() {
@@ -264,7 +265,7 @@ const InfiniteScoller = React.createClass({
       <div
         ref="infiniteContainer"
         className={this.props.containerClassName}
-        style={infiniteContainerStyle}
+        style={Object.assign(infiniteContainerStyle, this.props.style || {})}
         onScroll={this.onEditorScroll}
       >
         <div className="topSpacer" style={{height: this.topSpacerHeight}}/>
