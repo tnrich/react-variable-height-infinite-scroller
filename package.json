@@ -1,6 +1,6 @@
 {
   "name": "react-variable-height-infinite-scroller",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "variable row height scroller that renders just the visible rows with no precomputation of row-height necessary",
   "main": "index.js",
   "scripts": {
@@ -33,11 +33,9 @@
   },
   "homepage": "https://github.com/tnrich/react-variable-height-infinite-scroller#readme",
   "dependencies": {
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
     "validate.io-nonnegative-integer-array": "^1.0.1"
-  },
-  "peerDependencies": {
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0"
   },
   "devDependencies": {
     "babel": "^5.8.20",
@@ -50,8 +48,6 @@
     "eslint-plugin-react": "^3.3.0",
     "jsx-loader": "^0.13.2",
     "mt-changelog": "^0.6.1",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
     "react-tools": "^0.13.3",
     "reactify": "^1.1.1",
     "release-script": "^0.2.5",

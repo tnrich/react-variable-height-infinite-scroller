@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+
 import InfiniteScroller from './InfiniteScroller.js';
 import Example2 from './example2.js';
 import Example3 from './example3.js';
@@ -77,7 +79,7 @@ const Example1 = React.createClass({
   },
 });
 
-React.render((
+ReactDOM.render((
   <div style={{display: 'flex'}} >
     <Example1 />
     <div style={{width: 100}}/>
