@@ -1,3 +1,11 @@
+v3.3.5 - Wed, 01 Jun 2016 00:59:44 GMT
+--------------------------------------
+
+- [99359dc](../../commit/99359dc) [added] scrollTo method
+- [8bfbd07](../../commit/8bfbd07) [removed] react and react-dom as peer dependencies
+
+
+
 v3.3.3 - Wed, 13 Jan 2016 07:33:19 GMT
 --------------------------------------
 
