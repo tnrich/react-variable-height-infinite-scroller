@@ -26,6 +26,10 @@ const InfiniteScoller = React.createClass({
     };
   },
 
+  scrollTo(newRowStart) {
+    if (newRowStart !== null) this.prepareVisibleRows(newRowStart, this.state.visibleRows.length);
+  },
+
   onEditorScroll(event) {
     // tnr: we should maybe keep this implemented..
     if (this.adjustmentScroll) {

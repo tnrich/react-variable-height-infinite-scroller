@@ -44,6 +44,14 @@ const Example1 = React.createClass({
           Jump to a random row: Row #{this.state.newRowToJumpTo.row} (its height is {this.state.fakeRows[this.state.newRowToJumpTo.row].height})
         </button>
         <button onClick={() => {
+          this.list.scrollTo(this.state.newRowToJumpTo.row);
+          this.setState({
+            newRowToJumpTo: this.getNewRandomRow(this.state.fakeRows.length),
+          });
+        }}>
+          Jump to a random row using the scrollTo interface: Row #{this.state.newRowToJumpTo.row} (its height is {this.state.fakeRows[this.state.newRowToJumpTo.row].height})
+        </button>
+        <button onClick={() => {
           const newFakeRows = getFakeRowsWithHeights(newNumberOfRowsToDisplay);
           this.setState({
             fakeRows: newFakeRows,
@@ -55,6 +63,7 @@ const Example1 = React.createClass({
 
         <InfiniteScroller
           averageElementHeight={100} // this is a guess you make!
+          ref={c => this.list = c}
           containerHeight={600}
           rowToJumpTo={this.state.rowToJumpTo} // (optional) set this if you want to start/jump to a a particular row. Must be passed as a new object each time to allow for difference checking
           renderRow={this.renderRow} // function to render a row

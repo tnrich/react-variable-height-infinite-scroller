@@ -39,6 +39,29 @@ npm i --save react-variable-height-infinite-scroller
 | containerClassName `string` | *(optional)* infiniteContainer | className to apply on container |
 | onScroll `function` | *(optional)* no-op |  Hook to call on scroll |
 
+## Methods
+| Name | Description |
+| :--- |:---|
+| scrollTo | Alternate way to jump to a particular row. Usage below. |
+### scrollTo usage*:
+
+```js
+class MyComponent extends Component {
+  scrollSomewhere() {
+    this.list.scrollTo(Math.floor(Math.random() * 100));
+  }
+
+  render() {
+    return (
+      <div>
+        Here is my list:
+        <InfiniteScroller length={100} itemRenderer={...} ref={c => this.list = c} />
+        <button onClick={::this.scrollSomewhere}>Scroll Somewhere</button>
+      </div>
+    );
+  }
+}
+```
 
 Taken from the demo code: 
 
@@ -135,3 +158,5 @@ Run ```npm test``` to lint
 
 #Changelog: 
 [Changelog](https://github.com/tnrich/react-variable-height-infinite-scroller/blob/master/CHANGELOG.md)
+
+*(taken from "react-list")
