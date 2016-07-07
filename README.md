@@ -1,3 +1,7 @@
+# UPDATE: 
+Try using https://github.com/orgsync/react-list as they now have better support for the variable height use-case (see the https://github.com/orgsync/react-list#itemsizeestimatorindex-cache).
+
+
 # react-variable-height-infinite-scroller
 
 An infinite scroller especially made for variable row heights (no precomputation of row height necessary).
